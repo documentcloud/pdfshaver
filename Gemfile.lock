@@ -1,0 +1,22 @@
+PATH
+  remote: .
+  specs:
+    pdfium (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.5.1)
+    rake (10.4.2)
+    rake-compiler (0.9.5)
+      rake
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.5)
+  minitest
+  pdfium!
+  rake
+  rake-compiler
