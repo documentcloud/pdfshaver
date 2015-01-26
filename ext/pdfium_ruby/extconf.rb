@@ -47,4 +47,12 @@ LIB_FILES.each do | lib |
   have_library(lib) or abort "Couldn't find library lib#{lib} in #{LIB_DIRS.join(', ')}"
 end
 
+# Core Graphics needed on macs to run PDFium.
+if `uname`.chomp == 'Darwin' then
+
+  FRAMEWORKS = %w{AppKit CoreFoundation}
+
+  $LDFLAGS << FRAMEWORKS.map { |f| " -framework #{f}" }.join
+end
+
 create_makefile "pdfium_ruby"
