@@ -14,7 +14,6 @@ describe PDFium::Document do
     end
     
     it "should have a length" do
-      skip "Needs to be implemented"
       @document.length.must_equal 55
     end
   end
