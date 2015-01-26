@@ -13,4 +13,6 @@ void Define_Document();
 void Define_Page();
 void Define_PageSet();
 
+void inline ruby_puts(const char* str) { rb_funcall(rb_cObject, rb_intern("puts"), 1, rb_str_new_cstr(str)); }
+
 #endif

@@ -7,6 +7,7 @@ VALUE initialize_document_internals(int arg_count, VALUE args, VALUE self) {
   // `path` argument and an optional `options` hash.
   rb_scan_args(arg_count, &args, "11", &path, &options);
   //rb_funcall(rb_cObject, rb_intern("puts"), 1, path);
+  ruby_puts("Initializing!");
   
   // attempt to open document.  
   // path should at this point be validated & known to exist.
