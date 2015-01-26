@@ -2,7 +2,7 @@ require "mkmf"
 require 'rbconfig'
 # List directories to search for PDFium headers and library files to link against
 def append_pdfium_directory_to paths
-  paths.map{ |dir| File.join(dir, 'pdfium') } + paths
+  paths.map{ |dir| [File.join(dir, 'pdfium'), File.join(dir, 'pdfium', 'fpdfsdk', 'include')] }.flatten + paths
 end
 
 LIB_DIRS    = append_pdfium_directory_to %w[
