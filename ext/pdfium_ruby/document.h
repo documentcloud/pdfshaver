@@ -10,7 +10,7 @@ class Document {
   public:
 
     // constructor
-    Document();
+    Document(const *char path);
 
     // destructor
     ~Document();
