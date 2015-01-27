@@ -14,6 +14,8 @@ class Document {
 
     // destructor
     ~Document();
+    
+    int length();
 
   private:
     FPDF_DOCUMENT document;

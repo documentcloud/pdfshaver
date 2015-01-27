@@ -14,6 +14,7 @@ void Define_Page();
 void Define_PageSet();
 
 // helper function for printing string literals for debugging purposes
-void inline ruby_puts(const char* str) { rb_funcall(rb_cObject, rb_intern("puts"), 1, rb_str_new_cstr(str)); }
+void inline ruby_puts_cstring(const char* str) { rb_funcall(rb_cObject, rb_intern("puts"), 1, rb_str_new_cstr(str)); }
+void inline ruby_puts_values(VALUE str){ rb_funcall(rb_cObject, rb_intern("puts"), 1, str); }
 
 #endif
