@@ -7,7 +7,6 @@ module PDFium
       # otherwise attempt to acquire it.
       
       open_document_with_pdfium(path)
-      @length = 0
     end
   end
 end
