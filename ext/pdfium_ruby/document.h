@@ -10,14 +10,20 @@ class Document {
   public:
 
     // constructor
-    Document(const *char path);
+    Document(VALUE path);
 
     // destructor
     ~Document();
 
   private:
-    FPDF_DOCUMENT _document;
+    FPDF_DOCUMENT document;
+    bool free_once_pages_are_closed;
+    //std::unordered_set<Page*> open_pages;
+    //void freeUnlessPagesAreOpen();
 };
 
+static void free_document_when_safe(Document* document);
+
+VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self);
 
 #endif // __DOCUMENT_H__
