@@ -12,6 +12,6 @@ void Init_pdfium_ruby (void) {
   
   // Define `Document` and `Page` classes
   Define_Document();
-  //Define_Page();
+  Define_Page();
   //Define_PageSet();
 }

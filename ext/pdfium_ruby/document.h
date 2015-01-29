@@ -3,6 +3,7 @@
 
 #include "pdfium_ruby.h"
 #include "fpdf_ext.h"
+#include "page.h"
 
 // C++ Class to wrap lifecycle of
 // PDF Documents opened through PDFium.
@@ -21,11 +22,12 @@ class Document {
     
     // a guard for the destructor.
     void destroyUnlessPagesAreOpen();
-
+    
     // destructor
     ~Document();
     
   private:
+    //bool subscribeToPage(Page* page);
     FPDF_DOCUMENT document;
     bool free_once_pages_are_closed;
     //std::unordered_set<Page*> open_pages;
