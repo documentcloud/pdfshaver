@@ -18,7 +18,6 @@ HEADER_DIRS = append_pdfium_directory_to %w[
 dir_config("pdfium", HEADER_DIRS, LIB_DIRS)
 
 LIB_FILES= %w[
-  pdfium
   bigint
   freetype
   fpdfdoc
@@ -42,6 +41,7 @@ LIB_FILES= %w[
   fdrm
   fxge
   pthread
+  pdfium
 ]
 LIB_FILES.each do | lib |
   have_library(lib) or abort "Couldn't find library lib#{lib} in #{LIB_DIRS.join(', ')}"
