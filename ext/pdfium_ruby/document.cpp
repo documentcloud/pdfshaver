@@ -25,6 +25,7 @@ bool Document::load(VALUE path) {
   // indicate that Ruby is still using this document.
   this->opened = true;
   this->ready_to_be_freed = false;
+  return this->opened;
 }
 
 int Document::length() { return FPDF_GetPageCount(document); }
