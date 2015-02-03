@@ -7,6 +7,10 @@ describe PDFium::Document do
     PDFium::Document.new(path).must_be_instance_of PDFium::Document
   end
   
+  it "should throw an error if path can't be found" do
+    Proc.new{ PDFium::Document.new("suede shoes") }.must_raise ArgumentError
+  end
+  
   describe "instance methods" do
     before do
       path = File.join(FIXTURES, 'uncharter.pdf')
@@ -49,7 +53,22 @@ describe PDFium::PageSet do
 end
 
 describe PDFium::Page do
+  before do
+    path = File.join(FIXTURES, 'uncharter.pdf')
+    @document = PDFium::Document.new(path)
+  end
+  
   it "should be instantiated" do
-    skip "Needs to be implemented"
+    PDFium::Page.new(@document, 1).must_be_instance_of PDFium::Page
+  end
+  
+  it "should throw an error if initialized without a document" do
+    Proc.new{ PDFium::Page.new("lol", 1) }.must_raise ArgumentError
+  end
+  
+  it "should throw an error if initialized with an invalid page number" do
+    Proc.new{ PDFium::Page.new(@document) }.must_raise ArgumentError
+    Proc.new{ PDFium::Page.new(@document, -12) }.must_raise ArgumentError
+    Proc.new{ PDFium::Page.new(@document, 30000) }.must_raise ArgumentError
   end
 end
