@@ -30,6 +30,8 @@ bool Document::load(VALUE path) {
 
 int Document::length() { return FPDF_GetPageCount(document); }
 
+FPDF_DOCUMENT Document::fpdf_document(){ return this->document; }
+    
 void Document::flagDocumentAsReadyForRelease() { this->ready_to_be_freed = true; }
 
 void Document::destroyUnlessPagesAreOpen() {

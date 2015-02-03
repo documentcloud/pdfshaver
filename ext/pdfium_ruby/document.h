@@ -1,9 +1,12 @@
 #ifndef __DOCUMENT_H__
 #define __DOCUMENT_H__
 
+// forward declaration since Page/Document classes are interdependent
+class Page;
 #include "pdfium_ruby.h"
 #include "fpdf_ext.h"
 #include "page.h"
+#include <unordered_set>
 
 // C++ Class to wrap lifecycle of
 // PDF Documents opened through PDFium.
@@ -17,6 +20,8 @@ class Document {
     
     // wrapper for PDFium's pageCount
     int length();
+    
+    FPDF_DOCUMENT fpdf_document();
     
     // flag to set instances as ready to be disposed of
     // pending ensuring all its pages have been first closed.
@@ -33,7 +38,7 @@ class Document {
     FPDF_DOCUMENT document;
     bool opened;
     bool ready_to_be_freed;
-    //std::unordered_set<Page*> open_pages;
+    std::unordered_set<Page*> open_pages;
 };
 
 static void destroy_document_when_safe(Document* document);
