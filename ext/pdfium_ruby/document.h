@@ -11,8 +11,10 @@ class Document {
   public:
 
     // constructor
-    Document(VALUE path);
-
+    Document();
+    
+    bool load(VALUE path);
+    
     // wrapper for PDFium's pageCount
     int length();
     
@@ -29,12 +31,14 @@ class Document {
   private:
     //bool subscribeToPage(Page* page);
     FPDF_DOCUMENT document;
-    bool free_once_pages_are_closed;
+    bool opened;
+    bool ready_to_be_freed;
     //std::unordered_set<Page*> open_pages;
 };
 
 static void destroy_document_when_safe(Document* document);
 
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self);
+VALUE document_allocate(VALUE rb_PDFium_Document);
 
 #endif // __DOCUMENT_H__

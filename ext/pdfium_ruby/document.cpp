@@ -4,12 +4,12 @@
 * C++ Document definition
 *********************************************/
 
-Document::Document(VALUE path) {
-  // load the document via PDFium.
-  // returns false if loading document fails.
-  this->document = FPDF_LoadDocument(StringValuePtr(path), NULL);
-  // indicate that Ruby is still using this document.
-  this->free_once_pages_are_closed = false;
+Document::Document() {
+  // Initialize state variables
+  // to mark whether document has been used
+  // and whether document is freeable.
+  this->opened            = false;
+  this->ready_to_be_freed = true;
 }
 
 Document::~Document() {
@@ -18,14 +18,26 @@ Document::~Document() {
   if (document) { FPDF_CloseDocument(document); }
 }
 
+bool Document::load(VALUE path) {
+  // load the document via PDFium.
+  // returns false if loading document fails.
+  this->document = FPDF_LoadDocument(StringValuePtr(path), NULL);
+  // indicate that Ruby is still using this document.
+  this->opened = true;
+  this->ready_to_be_freed = false;
+}
+
 int Document::length() { return FPDF_GetPageCount(document); }
 
-void Document::flagDocumentAsReadyForRelease() { this->free_once_pages_are_closed = true; }
+void Document::flagDocumentAsReadyForRelease() { this->ready_to_be_freed = true; }
 
 void Document::destroyUnlessPagesAreOpen() {
   // once the document is no longer being used, and none of its child pages are open
   // it's safe to destroy.
-  if (free_once_pages_are_closed /*&& open_pages.empty()*/) { delete this; }
+  if (!this->opened || (this->opened && this->ready_to_be_freed /*&& open_pages.empty()*/)) { 
+    ruby_puts_cstring("Deleting Document");
+    delete this;
+  }
 }
 
 /********************************************
@@ -37,26 +49,33 @@ void Define_Document() {
   VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
   VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Document"));
   
+  rb_define_alloc_func(rb_PDFium_Document, *document_allocate);
+  
   rb_define_private_method(rb_PDFium_Document, "open_document_with_pdfium", 
                             CPP_RUBY_METHOD_FUNC(initialize_document_internals), -1);
 };
 
+VALUE document_allocate(VALUE rb_PDFium_Document) {
+  Document* document = new Document();
+  return Data_Wrap_Struct(rb_PDFium_Document, NULL, destroy_document_when_safe, document);
+}
+
 // Entry point for PDFium::Document's ruby initializer into C++ land
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
-
+  // Get the PDFium namespace and get the `Document` class inside it.
+  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
+  VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Document"));
+  
   // use Ruby's argument scanner to pull out a required
   // `path` argument and an optional `options` hash.
   VALUE path, options;
   int number_of_args = rb_scan_args(arg_count, args, "11", &path, &options);
-  
+
   // attempt to open document.
   // path should at this point be validated & known to exist.
-  Document* document = new Document(path);
-
-  // Get the PDFium namespace and get the `Document` class inside it.
-  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
-  VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Document"));
-  Data_Wrap_Struct(rb_PDFium_Document, NULL, destroy_document_when_safe, document);
+  Document* document;
+  Data_Get_Struct(self, Document, document);
+  document->load(path);
   
   // get the document length and store it as an instance variable on the class.
   rb_ivar_set(self, rb_intern("@length"), INT2FIX(document->length()));
