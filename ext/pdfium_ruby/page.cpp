@@ -34,10 +34,15 @@ void Define_Page() {
   VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
   VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Page"));
   
-  rb_define_private_method(rb_PDFium_Document, "open_page_with_pdfium", 
+  rb_define_private_method(rb_PDFium_Document, "initialize_page_internals", 
                             CPP_RUBY_METHOD_FUNC(initialize_page_internals), -1); 
 }
 
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
+  // use Ruby's argument scanner to pull out a required
+  // `path` argument and an optional `options` hash.
+  VALUE path, options;
+  int number_of_args = rb_scan_args(arg_count, args, "11", &path, &options);
+  
   
 }

@@ -71,4 +71,13 @@ describe PDFium::Page do
     Proc.new{ PDFium::Page.new(@document, -12) }.must_raise ArgumentError
     Proc.new{ PDFium::Page.new(@document, 30000) }.must_raise ArgumentError
   end
+  
+  describe "instance methods" do
+    let (:page) { PDFium::Page.new(@document, 1) }
+    it "should have the right width, height and aspect ratio" do
+      page.width.must_be_kind_of Integer
+      page.height.must_be_kind_of Integer
+      page.aspect.must_be_kind_of Float
+    end
+  end
 end
