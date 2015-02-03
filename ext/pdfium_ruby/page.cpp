@@ -1,5 +1,9 @@
 #include "page.h"
 
+/********************************************
+* C++ Page definition
+*********************************************/
+
 Page::Page(Document* document, int page_number) {
   
 }
@@ -19,6 +23,11 @@ double
 Page::height(){
     return FPDF_GetPageHeight(this->page);
 }
+
+
+/********************************************
+* Ruby class definition and initialization
+*********************************************/
 
 void Define_Page() {
   // Get the PDFium namespace and get the `Page` class inside it.

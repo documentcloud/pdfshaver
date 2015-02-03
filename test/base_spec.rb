@@ -21,7 +21,7 @@ describe PDFium::Document do
 end
 
 describe PDFium::PageSet do
-  
+
   before do
     path = File.join(FIXTURES, 'uncharter.pdf')
     @document = PDFium::Document.new(path)
@@ -52,8 +52,4 @@ describe PDFium::Page do
   it "should be instantiated" do
     skip "Needs to be implemented"
   end
-end
-
-describe PDFium::PageSet do
-  let(:document) { PDFium::Document.new File.join(FIXTURES, 'uncharter.pdf') }
 end
