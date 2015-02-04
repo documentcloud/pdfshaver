@@ -18,7 +18,7 @@ bool Page::load(Document* document, int page_number) {
 
 double Page::width(){ return FPDF_GetPageWidth(this->page); }
 double Page::height(){ return FPDF_GetPageHeight(this->page); }
-float Page::aspect() { return (float)(width()) / (float)(height()); }
+double Page::aspect() { return width() / height(); }
 
 Page::~Page() { 
   if (this->opened) {

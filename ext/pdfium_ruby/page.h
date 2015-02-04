@@ -14,10 +14,9 @@ class Page {
     
     bool render();
     
-    float aspect();
-    
     double width();
     double height();
+    double aspect();
     
     ~Page();
     
