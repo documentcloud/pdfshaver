@@ -82,9 +82,20 @@ describe PDFium::Page do
   end
   
   describe "GC" do
-    it "wont blow up if doc falls out of scope before pages" do
+    it "won't segfault if when a document is GCed" do
       doc = PDFium::Document.new(File.join(FIXTURES,'uncharter.pdf'))
-      p1 = PDFium::Page.new(@document, 1)
+      doc = nil
+      GC.start
+    end
+    
+    it "won't segfault if when an invalid document is GCed" do
+      Proc.new{ PDFium::Document.new("suede shoes") }.must_raise ArgumentError
+      GC.start
+    end
+    
+    it "won't segfault if document falls out of scope before pages" do
+      doc = PDFium::Document.new(File.join(FIXTURES,'uncharter.pdf'))
+      p1 = PDFium::Page.new(doc, 1)
       doc = nil
       GC.start
       p1 = nil
