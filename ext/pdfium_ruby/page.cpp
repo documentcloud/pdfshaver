@@ -11,7 +11,7 @@ bool Page::load(Document* document, int page_number) {
   this->page_number = page_number;
   
   this->page = FPDF_LoadPage(document->fpdf_document(), page_number);
-  //document->notifyPageOpened(this);
+  document->notifyPageOpened(this);
   return true;
 }
 
@@ -31,6 +31,7 @@ Page::height(){
     return FPDF_GetPageHeight(this->page);
 }
 
+Page::~Page() { this->document->notifyPageClosed(this); }
 
 /********************************************
 * Ruby class definition and initialization
@@ -77,7 +78,4 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   return self;
 }
 
-static void destroy_page(Page* page) {
-  //page->document->notifyPageClosed(page);
-  delete page;
-}
+static void destroy_page(Page* page) { delete page; }

@@ -34,10 +34,20 @@ FPDF_DOCUMENT Document::fpdf_document(){ return this->document; }
     
 void Document::flagDocumentAsReadyForRelease() { this->ready_to_be_freed = true; }
 
+
+void Document::notifyPageOpened(Page* page) {
+  ruby_puts_cstring("Adding page to open pages");
+  this->open_pages.insert(page);
+}
+void Document::notifyPageClosed(Page* page) {
+  ruby_puts_cstring("Removing page from open pages");
+  this->open_pages.erase(page);
+  this->destroyUnlessPagesAreOpen();
+}
 void Document::destroyUnlessPagesAreOpen() {
   // once the document is no longer being used, and none of its child pages are open
   // it's safe to destroy.
-  if (!this->opened || (this->opened && this->ready_to_be_freed /*&& open_pages.empty()*/)) { 
+  if (!(this->opened) || (this->opened && this->ready_to_be_freed && open_pages.empty())) { 
     ruby_puts_cstring("Deleting Document");
     delete this;
   }

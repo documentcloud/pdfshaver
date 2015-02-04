@@ -30,6 +30,9 @@ class Document {
     // a guard for the destructor.
     void destroyUnlessPagesAreOpen();
     
+    void notifyPageClosed(Page* page);
+    void notifyPageOpened(Page* page);
+    
     // destructor
     ~Document();
     
