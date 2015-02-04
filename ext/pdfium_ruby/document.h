@@ -12,6 +12,7 @@ class Page;
 // PDF Documents opened through PDFium.
 class Document {
   public:
+    FPDF_DOCUMENT fpdf_document;
 
     // constructor
     Document();
@@ -21,7 +22,6 @@ class Document {
     // wrapper for PDFium's pageCount
     int length();
     
-    FPDF_DOCUMENT fpdf_document();
     
     // flag to set instances as ready to be disposed of
     // pending ensuring all its pages have been first closed.
@@ -38,7 +38,6 @@ class Document {
     
   private:
     //bool subscribeToPage(Page* page);
-    FPDF_DOCUMENT document;
     bool opened;
     bool ready_to_be_freed;
     std::unordered_set<Page*> open_pages;

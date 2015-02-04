@@ -12,11 +12,11 @@ class Page {
     
     bool load(Document* document, int page_number);
     
-    bool render();
-    
     double width();
     double height();
     double aspect();
+    
+    bool render(VALUE path, int width, int height);
     
     ~Page();
     
@@ -24,7 +24,7 @@ class Page {
     int page_number;
     bool opened;
     Document *document;
-    FPDF_PAGE page;
+    FPDF_PAGE fpdf_page;
 };
 
 void Define_Page();

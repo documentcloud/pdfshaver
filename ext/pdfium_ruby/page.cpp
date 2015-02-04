@@ -10,19 +10,22 @@ bool Page::load(Document* document, int page_number) {
   this->document = document;
   this->page_number = page_number;
   
-  this->page = FPDF_LoadPage(document->fpdf_document(), page_number);
+  this->fpdf_page = FPDF_LoadPage(document->fpdf_document, page_number);
   document->notifyPageOpened(this);
   this->opened = true;
   return this->opened;
 }
 
-double Page::width(){ return FPDF_GetPageWidth(this->page); }
-double Page::height(){ return FPDF_GetPageHeight(this->page); }
-double Page::aspect() { return width() / height(); }
+double Page::width(){ return FPDF_GetPageWidth(this->fpdf_page); }
+double Page::height(){ return FPDF_GetPageHeight(this->fpdf_page); }
+double Page::aspect() { return height() / width(); }
+
+bool Page::render(VALUE path, int width, int height) {
+}
 
 Page::~Page() { 
   if (this->opened) {
-    FPDF_ClosePage(this->page);
+    FPDF_ClosePage(this->fpdf_page);
     this->document->notifyPageClosed(this);
   }
 }

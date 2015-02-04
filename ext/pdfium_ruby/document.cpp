@@ -15,23 +15,21 @@ Document::Document() {
 Document::~Document() {
   // make sure the document exists and was initialized before
   // trying to close it.
-  if (this->opened) { FPDF_CloseDocument(document); }
+  if (this->opened) { FPDF_CloseDocument(this->fpdf_document); }
 }
 
 bool Document::load(VALUE path) {
   // load the document via PDFium.
   // returns false if loading document fails.
-  this->document = FPDF_LoadDocument(StringValuePtr(path), NULL);
+  this->fpdf_document = FPDF_LoadDocument(StringValuePtr(path), NULL);
   // indicate that Ruby is still using this document.
-  this->opened = !!(this->document);
+  this->opened = !!(this->fpdf_document);
   this->ready_to_be_freed = false;
   return this->opened;
 }
 
-int Document::length() { return FPDF_GetPageCount(document); }
+int Document::length() { return FPDF_GetPageCount(this->fpdf_document); }
 
-FPDF_DOCUMENT Document::fpdf_document(){ return this->document; }
-    
 void Document::flagDocumentAsReadyForRelease() { this->ready_to_be_freed = true; }
 
 
