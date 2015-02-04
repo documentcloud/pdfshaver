@@ -73,11 +73,22 @@ describe PDFium::Page do
   end
   
   describe "instance methods" do
-    let (:page) { PDFium::Page.new(@document, 1) }
+    before { @page = PDFium::Page.new(@document, 1) }
     it "should have the right width, height and aspect ratio" do
-      page.width.must_be_kind_of Integer
-      page.height.must_be_kind_of Integer
-      page.aspect.must_be_kind_of Float
+      @page.width.must_be_kind_of Integer
+      @page.height.must_be_kind_of Integer
+      @page.aspect.must_be_kind_of Float
+    end
+  end
+  
+  describe "GC" do
+    it "wont blow up if doc falls out of scope before pages" do
+      doc = PDFium::Document.new(File.join(FIXTURES,'uncharter.pdf'))
+      p1 = PDFium::Page.new(@document, 1)
+      doc = nil
+      GC.start
+      p1 = nil
+      GC.start
     end
   end
 end

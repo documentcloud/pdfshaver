@@ -4,7 +4,7 @@
 * C++ Page definition
 *********************************************/
 
-Page::Page() {}
+Page::Page() { this->opened = false; }
 
 bool Page::load(Document* document, int page_number) {
   this->document = document;
@@ -12,28 +12,19 @@ bool Page::load(Document* document, int page_number) {
   
   this->page = FPDF_LoadPage(document->fpdf_document(), page_number);
   document->notifyPageOpened(this);
-  return true;
+  this->opened = true;
+  return this->opened;
 }
 
-float
-Page::aspect() {
-  return (float)(width()) / (float)(height());
-}
-
-double
-Page::width(){
-    return FPDF_GetPageWidth(this->page);
-}
-
-
-double
-Page::height(){
-    return FPDF_GetPageHeight(this->page);
-}
+double Page::width(){ return FPDF_GetPageWidth(this->page); }
+double Page::height(){ return FPDF_GetPageHeight(this->page); }
+float Page::aspect() { return (float)(width()) / (float)(height()); }
 
 Page::~Page() { 
-  FPDF_ClosePage(this->page);
-  this->document->notifyPageClosed(this);
+  if (this->opened) {
+    FPDF_ClosePage(this->page);
+    this->document->notifyPageClosed(this);
+  }
 }
 
 /********************************************

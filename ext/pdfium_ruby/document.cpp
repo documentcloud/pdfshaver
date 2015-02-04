@@ -15,7 +15,7 @@ Document::Document() {
 Document::~Document() {
   // make sure the document exists and was initialized before
   // trying to close it.
-  if (document) { FPDF_CloseDocument(document); }
+  if (this->opened) { FPDF_CloseDocument(document); }
 }
 
 bool Document::load(VALUE path) {
@@ -23,7 +23,7 @@ bool Document::load(VALUE path) {
   // returns false if loading document fails.
   this->document = FPDF_LoadDocument(StringValuePtr(path), NULL);
   // indicate that Ruby is still using this document.
-  this->opened = true;
+  this->opened = !!(this->document);
   this->ready_to_be_freed = false;
   return this->opened;
 }
@@ -47,7 +47,7 @@ void Document::notifyPageClosed(Page* page) {
 void Document::destroyUnlessPagesAreOpen() {
   // once the document is no longer being used, and none of its child pages are open
   // it's safe to destroy.
-  if (!(this->opened) || (this->opened && this->ready_to_be_freed && open_pages.empty())) { 
+  if (!(this->opened) || (this->opened && this->ready_to_be_freed && this->open_pages.empty())) { 
     //ruby_puts_cstring("Deleting Document");
     delete this;
   }
@@ -89,6 +89,7 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
   Document* document;
   Data_Get_Struct(self, Document, document);
   document->load(path);
+  //if (!document->isValid()) { rb_raise(rb_eArgError, "Failed to load: %s", StringValuePtr(path)); }
   
   // get the document length and store it as an instance variable on the class.
   rb_ivar_set(self, rb_intern("@length"), INT2FIX(document->length()));
