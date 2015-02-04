@@ -31,7 +31,10 @@ Page::height(){
     return FPDF_GetPageHeight(this->page);
 }
 
-Page::~Page() { this->document->notifyPageClosed(this); }
+Page::~Page() { 
+  FPDF_ClosePage(this->page);
+  this->document->notifyPageClosed(this);
+}
 
 /********************************************
 * Ruby class definition and initialization
