@@ -1,4 +1,5 @@
 #include "page.h"
+#include <FreeImage.h>
 
 /********************************************
 * C++ Page definition
@@ -20,7 +21,88 @@ double Page::width(){ return FPDF_GetPageWidth(this->fpdf_page); }
 double Page::height(){ return FPDF_GetPageHeight(this->fpdf_page); }
 double Page::aspect() { return height() / width(); }
 
-bool Page::render(VALUE path, int width, int height) {
+bool Page::render(char* path, int width, int height) {
+  // If no height or width is supplied, render at natural dimensions.
+  if (!width && !height) {
+    return false;
+    //width  = this->width();
+    //printf("width: %d", width);
+    //height = this->height();
+  }
+  printf("Derp? %d, %d", width, height);
+  // When given only a height or a width, 
+  // infer the other by preserving page aspect ratio.
+  if ( width && !height) { height = width  * this->aspect(); }
+  if (!width &&  height) { width  = height / this->aspect(); }
+  
+  // Create bitmap.  width, height, alpha 1=enabled,0=disabled
+  bool alpha = false;
+  FPDF_BITMAP bitmap = FPDFBitmap_Create(width, height, alpha);
+  if (!bitmap) { return false; }
+
+  // fill all pixels with white for the background color
+  FPDFBitmap_FillRect(bitmap, 0, 0, width, height, 0xFFFFFFFF);
+
+  // Render a page to a bitmap in RGBA format
+  // args are: *buffer, page, start_x, start_y, size_x, size_y, rotation, and flags
+  // flags are:
+  //      0 for normal display, or combination of flags defined below
+  //   0x01 Set if annotations are to be rendered
+  //   0x02 Set if using text rendering optimized for LCD display
+  //   0x04 Set if you don't want to use GDI+
+  int start_x = 0;
+  int start_y = 0;
+  int rotation = 0;
+  int flags = 0;
+  FPDF_RenderPageBitmap(bitmap, this->fpdf_page, start_x, start_y, width, height, rotation, flags);
+
+  // The stride holds the width of one row in bytes.  It may not be an exact
+  // multiple of the pixel width because the data may be packed to always end on a byte boundary
+  int stride = FPDFBitmap_GetStride(bitmap);
+
+  // Safety checks to make sure that the bitmap
+  // is properly sized and can be safely manipulated
+  bool bitmapIsntValid = (
+    (stride < 0) || 
+    (width > INT_MAX / height) || 
+    ((stride * height) > (INT_MAX / 3))
+  );
+  if (bitmapIsntValid){
+      FPDFBitmap_Destroy(bitmap);
+      return false;
+  }
+
+  // Read the FPDF bitmap into a FreeImage bitmap.
+  FIBITMAP *raw = FreeImage_ConvertFromRawBits(
+    (BYTE*)FPDFBitmap_GetBuffer(bitmap), width, height, stride, 32, 0xFF0000, 0x00FF00, 0x0000FF, true);
+
+  // at this point we're done with rendering and
+  // can destroy the FPDF bitmap
+  FPDFBitmap_Destroy(bitmap);
+
+  // Conversion to jpg or gif require that the bpp be set to 24
+  // since we're not exporting using alpha transparency above in FPDFBitmap_Create
+  FIBITMAP *image = FreeImage_ConvertTo24Bits(raw);
+  FreeImage_Unload(raw);
+
+  // figure out the desired format from the file extension
+  FREE_IMAGE_FORMAT format = FreeImage_GetFIFFromFilename(path);
+
+  bool success = false;
+  if ( FIF_GIF == format ){
+      // Gif requires quantization to drop to 8bpp
+      FIBITMAP *gif = FreeImage_ColorQuantize(image, FIQ_WUQUANT);
+      success = FreeImage_Save(FIF_GIF, gif, path, GIF_DEFAULT);
+      FreeImage_Unload(gif);
+  } else {
+      // All other formats should be just a save call
+      success = FreeImage_Save(format, image, path, 0);
+  }
+
+  // unload the image
+  FreeImage_Unload(image);
+
+  return success;
 }
 
 Page::~Page() { 
@@ -41,8 +123,9 @@ void Define_Page() {
   
   rb_define_alloc_func(rb_PDFium_Page, *page_allocate);
   
+  rb_define_method(rb_PDFium_Page, "render", CPP_RUBY_METHOD_FUNC(page_render), -1);
   rb_define_private_method(rb_PDFium_Page, "initialize_page_internals", 
-                            CPP_RUBY_METHOD_FUNC(initialize_page_internals), -1); 
+                            CPP_RUBY_METHOD_FUNC(initialize_page_internals),-1);
 }
 
 VALUE page_allocate(VALUE rb_PDFium_Page) {
@@ -50,11 +133,25 @@ VALUE page_allocate(VALUE rb_PDFium_Page) {
   return Data_Wrap_Struct(rb_PDFium_Page, NULL, destroy_page, page);
 }
 
+//bool page_render(int arg_count, VALUE* args, VALUE self) {
+bool page_render(int arg_count, VALUE* args, VALUE self) {
+  VALUE path, options;
+  int number_of_args = rb_scan_args(arg_count, args, "1:", &path, &options);
+  
+  //VALUE width_maybe  = rb_hash_aref(rb_options, rb_SYM_width);
+  //VALUE height_maybe = rb_hash_aref(rb_options, rb_SYM_height);
+  
+  //int width, height;
+  //
+  //Page* page;
+  //Data_Get_Struct(self, Page, page);
+  //return page->render(StringValuePtr(path), width, height);
+}
+
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   // use Ruby's argument scanner to pull out a required
-  // `path` argument and an optional `options` hash.
   VALUE rb_document, page_number, options;
-  int number_of_args = rb_scan_args(arg_count, args, "12", &rb_document, &page_number, &options);
+  int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_number, &options);
   
   // Get the PDFium namespace and get the `Page` class inside it.
   VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));

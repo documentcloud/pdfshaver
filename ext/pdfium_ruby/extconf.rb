@@ -42,6 +42,7 @@ LIB_FILES= %w[
   fxge
   pthread
   pdfium
+  freeimage
 ]
 LIB_FILES.each do | lib |
   have_library(lib) or abort "Couldn't find library lib#{lib} in #{LIB_DIRS.join(', ')}"

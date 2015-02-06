@@ -16,7 +16,7 @@ class Page {
     double height();
     double aspect();
     
-    bool render(VALUE path, int width, int height);
+    bool render(char* path, int width, int height);
     
     ~Page();
     
@@ -29,6 +29,7 @@ class Page {
 
 void Define_Page();
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self);
+bool page_render(int arg_count, VALUE* args, VALUE self);
 VALUE page_allocate(VALUE rb_PDFium_Page);
 static void destroy_page(Page* page);
 
