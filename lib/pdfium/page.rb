@@ -9,10 +9,6 @@ module PDFium
       
       initialize_page_internals document, number
     end
-    
-    def render path, width: :default, height: :default
-      
-    end
   end
   
   class PageSet

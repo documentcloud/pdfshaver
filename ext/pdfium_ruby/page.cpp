@@ -24,16 +24,14 @@ double Page::aspect() { return height() / width(); }
 bool Page::render(char* path, int width, int height) {
   // If no height or width is supplied, render at natural dimensions.
   if (!width && !height) {
-    return false;
-    //width  = this->width();
-    //printf("width: %d", width);
-    //height = this->height();
+    width  = (int)(this->width());
+    height = (int)(this->height());
   }
-  printf("Derp? %d, %d", width, height);
   // When given only a height or a width, 
   // infer the other by preserving page aspect ratio.
   if ( width && !height) { height = width  * this->aspect(); }
   if (!width &&  height) { width  = height / this->aspect(); }
+  printf("Derp? %d, %d\n", width, height);
   
   // Create bitmap.  width, height, alpha 1=enabled,0=disabled
   bool alpha = false;
@@ -136,16 +134,26 @@ VALUE page_allocate(VALUE rb_PDFium_Page) {
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
 bool page_render(int arg_count, VALUE* args, VALUE self) {
   VALUE path, options;
+  int width = 0, height = 0;
+
   int number_of_args = rb_scan_args(arg_count, args, "1:", &path, &options);
+  if (arg_count > 1) {
+    VALUE rb_width  = rb_hash_aref(options, ID2SYM(rb_intern("width")));
+    VALUE rb_height = rb_hash_aref(options, ID2SYM(rb_intern("height")));
+    
+    if (!(NIL_P(rb_width))) {
+      if (FIXNUM_P(rb_width)) { width = FIX2INT(rb_width); } 
+      else { rb_raise(rb_eArgError, ":width must be a integer"); }
+    }
+    if (!(NIL_P(rb_height))) {
+      if (FIXNUM_P(rb_height)) { height = FIX2INT(rb_height); } 
+      else { rb_raise(rb_eArgError, ":height must be a integer"); }
+    }
+  }
   
-  //VALUE width_maybe  = rb_hash_aref(rb_options, rb_SYM_width);
-  //VALUE height_maybe = rb_hash_aref(rb_options, rb_SYM_height);
-  
-  //int width, height;
-  //
-  //Page* page;
-  //Data_Get_Struct(self, Page, page);
-  //return page->render(StringValuePtr(path), width, height);
+  Page* page;
+  Data_Get_Struct(self, Page, page);
+  return page->render(StringValuePtr(path), width, height);
 }
 
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
