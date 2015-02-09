@@ -19,7 +19,7 @@ bool Page::load(Document* document, int page_number) {
 
 double Page::width(){ return FPDF_GetPageWidth(this->fpdf_page); }
 double Page::height(){ return FPDF_GetPageHeight(this->fpdf_page); }
-double Page::aspect() { return height() / width(); }
+double Page::aspect() { return width() / height(); }
 
 bool Page::render(char* path, int width, int height) {
   // If no height or width is supplied, render at natural dimensions.
@@ -29,8 +29,8 @@ bool Page::render(char* path, int width, int height) {
   }
   // When given only a height or a width, 
   // infer the other by preserving page aspect ratio.
-  if ( width && !height) { height = width  * this->aspect(); }
-  if (!width &&  height) { width  = height / this->aspect(); }
+  if ( width && !height) { height = width  / this->aspect(); }
+  if (!width &&  height) { width  = height * this->aspect(); }
   printf("Derp? %d, %d\n", width, height);
   
   // Create bitmap.  width, height, alpha 1=enabled,0=disabled
