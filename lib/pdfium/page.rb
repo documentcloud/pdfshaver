@@ -11,6 +11,11 @@ module PDFium
       @index  = number - 1
       initialize_page_internals document, @index
     end
+    
+    def <=> other
+      raise ArgumentError unless other.kind_of? self.class
+      self.index <=> other.index
+    end
   end
   
   class PageSet

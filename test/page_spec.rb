@@ -32,6 +32,18 @@ describe PDFium::Page do
       @page.aspect.must_be_kind_of Float
     end
     
+    it "should have a comparator and know which order pages go in" do
+      p1 = PDFium::Page.new(@document, 1)
+      p2 = PDFium::Page.new(@document, 2)
+      p3 = PDFium::Page.new(@document, 3)
+      
+      (p2 <=> p1).must_equal 1
+      (p2 <=> p2).must_equal 0
+      (p2 <=> p3).must_equal -1
+      
+      Proc.new{ p2 <=> :lol }.must_raise ArgumentError
+    end
+    
     it "should render an image and write it out to disk" do
       @page.render(@output_path).must_equal true
       File.exists?(@output_path).must_equal true
