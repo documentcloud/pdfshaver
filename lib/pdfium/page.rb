@@ -5,7 +5,7 @@ module PDFium
     def initialize document, number, options={}
       raise ArgumentError unless document.kind_of? PDFium::Document
       raise ArgumentError unless number.kind_of? Integer
-      raise ArgumentError unless number > 0 and number < document.length
+      raise ArgumentError unless number > 0 and number <= document.length
       
       @number = number
       @index  = number - 1
@@ -13,7 +13,7 @@ module PDFium
     end
     
     def <=> other
-      raise ArgumentError unless other.kind_of? self.class
+      raise ArgumentError, "unable to compare #{self.class} with #{other.class}" unless other.kind_of? self.class
       self.index <=> other.index
     end
   end

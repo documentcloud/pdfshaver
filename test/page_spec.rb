@@ -14,10 +14,14 @@ describe PDFium::Page do
     Proc.new{ PDFium::Page.new("lol", 1) }.must_raise ArgumentError
   end
   
-  it "should throw an error if initialized with an invalid page number" do
+  it "should only instantiate pages with a valid page number" do
     Proc.new{ PDFium::Page.new(@document) }.must_raise ArgumentError
     Proc.new{ PDFium::Page.new(@document, -12) }.must_raise ArgumentError
-    Proc.new{ PDFium::Page.new(@document, 30000) }.must_raise ArgumentError
+    Proc.new{ PDFium::Page.new(@document, 0) }.must_raise ArgumentError
+    Proc.new{ PDFium::Page.new(@document, @document.length+1) }.must_raise ArgumentError
+
+    PDFium::Page.new(@document, 1).must_be_instance_of PDFium::Page
+    PDFium::Page.new(@document, @document.length).must_be_instance_of PDFium::Page
   end
   
   describe "instance methods" do
