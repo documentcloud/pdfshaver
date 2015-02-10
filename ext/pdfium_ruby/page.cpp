@@ -136,7 +136,7 @@ VALUE page_allocate(VALUE rb_PDFium_Page) {
 }
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
-bool page_render(int arg_count, VALUE* args, VALUE self) {
+VALUE page_render(int arg_count, VALUE* args, VALUE self) {
   VALUE path, options;
   int width = 0, height = 0;
 
@@ -157,7 +157,7 @@ bool page_render(int arg_count, VALUE* args, VALUE self) {
   
   Page* page;
   Data_Get_Struct(self, Page, page);
-  return page->render(StringValuePtr(path), width, height);
+  return (page->render(StringValuePtr(path), width, height) ? Qtrue : Qfalse);
 }
 
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
