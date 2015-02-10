@@ -13,13 +13,17 @@ describe PDFium::Document do
   
   describe "instance methods" do
     before do
-      path = File.join(FIXTURES, 'uncharter.pdf')
-      @document = PDFium::Document.new(path)
+      @path = File.join(FIXTURES, 'uncharter.pdf')
+      @document = PDFium::Document.new(@path)
     end
     
     it "should have a length" do
       @document.length.must_equal 55
     end
+    
+    it { @document.must_equal @document }
+    it { @document.must_equal PDFium::Document.new(@path) }
+    it { @document.wont_equal PDFium::Document.new(File.join(FIXTURES, 'letter-to-canadians-from-jack-layton.pdf')) }
   end
   
 end

@@ -34,6 +34,7 @@ describe PDFium::Page do
       @page.width.must_be_kind_of Integer
       @page.height.must_be_kind_of Integer
       @page.aspect.must_be_kind_of Float
+      @page.document.must_be_same_as @document
     end
     
     it "should have a comparator and know which order pages go in" do
@@ -48,10 +49,12 @@ describe PDFium::Page do
       Proc.new{ p2 <=> :lol }.must_raise ArgumentError
     end
     
+    it { @page.must_equal @page }
     it { @page.must_equal PDFium::Page.new(@document,@page.number) }
     
     it "shouldn't be equal to a page with the same number from another document" do 
       other_document = PDFium::Document.new(File.join(FIXTURES, 'letter-to-canadians-from-jack-layton.pdf'))
+      (@page.document).wont_equal other_document
       @page.wont_equal PDFium::Page.new(other_document, @page.number)
     end
     
