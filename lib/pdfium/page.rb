@@ -7,7 +7,9 @@ module PDFium
       raise ArgumentError unless number.kind_of? Integer
       raise ArgumentError unless number > 0 and number < document.length
       
-      initialize_page_internals document, number
+      @number = number
+      @index  = number - 1
+      initialize_page_internals document, @index
     end
   end
   
