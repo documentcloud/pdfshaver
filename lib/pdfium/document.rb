@@ -8,5 +8,9 @@ module PDFium
       
       open_document_with_pdfium(path)
     end
+    
+    def pages(page_list=:all)
+      PageSet.new(self, page_list)
+    end
   end
 end

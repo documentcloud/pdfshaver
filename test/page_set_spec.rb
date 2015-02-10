@@ -15,15 +15,8 @@ describe PDFium::PageSet do
   
   describe "Document PageSet Interface" do
     it "should have an iterator" do
-      skip
-      pages = @document.pages(1..(@document.length/2)) # should be an enumerator of pages.
-      pages.length.must_equal @document.length/2
-
-      @document.pages.each do |page|
-        options = {}
-        image = page.rasterize(:gif, options) # => PDFium::GIF
-        image.save(path)
-      end
+      pages = @document.pages # should be an enumerator of pages.
+      pages.must_be_instance_of PDFium::PageSet
     end
   end
 end
