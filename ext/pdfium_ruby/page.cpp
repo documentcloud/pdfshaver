@@ -31,7 +31,7 @@ bool Page::render(char* path, int width, int height) {
   // infer the other by preserving page aspect ratio.
   if ( width && !height) { height = width  / this->aspect(); }
   if (!width &&  height) { width  = height * this->aspect(); }
-  printf("Derp? %d, %d\n", width, height);
+  //printf("Derp? %d, %d\n", width, height);
   
   // Create bitmap.  width, height, alpha 1=enabled,0=disabled
   bool alpha = false;
@@ -51,7 +51,7 @@ bool Page::render(char* path, int width, int height) {
   int start_x = 0;
   int start_y = 0;
   int rotation = 0;
-  int flags = 0;
+  int flags = FPDF_PRINTING; // A flag defined in PDFium's codebase.
   FPDF_RenderPageBitmap(bitmap, this->fpdf_page, start_x, start_y, width, height, rotation, flags);
 
   // The stride holds the width of one row in bytes.  It may not be an exact
@@ -71,11 +71,15 @@ bool Page::render(char* path, int width, int height) {
   }
 
   // Read the FPDF bitmap into a FreeImage bitmap.
+  unsigned bpp        = 32;
+  unsigned red_mask   = 0xFF0000;
+  unsigned green_mask = 0x00FF00;
+  unsigned blue_mask  = 0x0000FF;
+  bool     topdown    = true;
   FIBITMAP *raw = FreeImage_ConvertFromRawBits(
-    (BYTE*)FPDFBitmap_GetBuffer(bitmap), width, height, stride, 32, 0xFF0000, 0x00FF00, 0x0000FF, true);
+    (BYTE*)FPDFBitmap_GetBuffer(bitmap), width, height, stride, bpp, red_mask, green_mask, blue_mask, topdown);
 
-  // at this point we're done with rendering and
-  // can destroy the FPDF bitmap
+  // at this point we're done with the FPDF bitmap and can destroy it.
   FPDFBitmap_Destroy(bitmap);
 
   // Conversion to jpg or gif require that the bpp be set to 24
