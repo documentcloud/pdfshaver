@@ -12,6 +12,11 @@ module PDFium
       initialize_page_internals document, @index
     end
     
+    def == other
+      raise ArgumentError, "unable to compare #{self.class} with #{other.class}" unless other.kind_of? self.class
+      self.index == other.index
+    end
+    
     def <=> other
       raise ArgumentError, "unable to compare #{self.class} with #{other.class}" unless other.kind_of? self.class
       self.index <=> other.index
