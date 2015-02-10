@@ -48,6 +48,13 @@ describe PDFium::Page do
       Proc.new{ p2 <=> :lol }.must_raise ArgumentError
     end
     
+    it { @page.must_equal PDFium::Page.new(@document,@page.number) }
+    
+    it "shouldn't be equal to a page with the same number from another document" do 
+      other_document = PDFium::Document.new(File.join(FIXTURES, 'letter-to-canadians-from-jack-layton.pdf'))
+      @page.wont_equal PDFium::Page.new(other_document, @page.number)
+    end
+    
     it "should render an image and write it out to disk" do
       @page.render(@output_path).must_equal true
       File.exists?(@output_path).must_equal true
