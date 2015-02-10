@@ -1,6 +1,6 @@
 module PDFium
   class Page
-    attr_reader :document, :width, :height, :aspect
+    attr_reader :document, :width, :height, :aspect, :number, :index
     
     def initialize document, number, options={}
       raise ArgumentError unless document.kind_of? PDFium::Document

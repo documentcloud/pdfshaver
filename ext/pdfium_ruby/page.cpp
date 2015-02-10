@@ -7,11 +7,11 @@
 
 Page::Page() { this->opened = false; }
 
-bool Page::load(Document* document, int page_number) {
+bool Page::load(Document* document, int page_index) {
   this->document = document;
-  this->page_number = page_number;
+  this->page_index = page_index;
   
-  this->fpdf_page = FPDF_LoadPage(document->fpdf_document, page_number);
+  this->fpdf_page = FPDF_LoadPage(document->fpdf_document, page_index);
   document->notifyPageOpened(this);
   this->opened = true;
   return this->opened;
@@ -162,8 +162,8 @@ VALUE page_render(int arg_count, VALUE* args, VALUE self) {
 
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   // use Ruby's argument scanner to pull out a required
-  VALUE rb_document, page_number, options;
-  int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_number, &options);
+  VALUE rb_document, page_index, options;
+  int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_index, &options);
   
   // Get the PDFium namespace and get the `Page` class inside it.
   VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
@@ -175,7 +175,7 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   Page* page;
   Data_Get_Struct(self, Page, page);
   
-  page->load(document, FIX2INT(page_number));
+  page->load(document, FIX2INT(page_index));
   
   rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
   rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));

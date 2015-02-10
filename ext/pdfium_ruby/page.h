@@ -21,7 +21,7 @@ class Page {
     ~Page();
     
   private:
-    int page_number;
+    int page_index;
     bool opened;
     Document *document;
     FPDF_PAGE fpdf_page;
