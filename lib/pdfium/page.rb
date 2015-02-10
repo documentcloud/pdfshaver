@@ -36,6 +36,10 @@ module PDFium
       enumerator.each(&block)
     end
     
+    def [](page_index)
+      Page.new(@document, page_index+1)
+    end
+    
     private
     def enumerator
       @enumerator ||= Enumerator.new do |yielder|
