@@ -19,10 +19,24 @@ module PDFium
   end
   
   class PageSet
+    include Enumerable
+
     attr_reader :document
-    
     def initialize document, page_list=:all, options={}
       @document = document
+    end
+    
+    def each(&block)
+      enumerator.each(&block)
+    end
+    
+    private
+    def enumerator
+      @enumerator ||= Enumerator.new do |yielder|
+        Range.new(1, self.document.length).each do |page_number|
+          yielder.yield Page.new(self.document, page_number)
+        end
+      end
     end
   end
 end

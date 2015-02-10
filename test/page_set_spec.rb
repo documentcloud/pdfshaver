@@ -10,8 +10,9 @@ describe PDFium::PageSet do
   it "should be an enumerable collection of pages" do
     pages = PDFium::PageSet.new(@document)
     pages.must_be_instance_of PDFium::PageSet
+    pages.must_respond_to(:each)
   end
-
+  
   describe "Document PageSet Interface" do
     it "should have an iterator" do
       skip
