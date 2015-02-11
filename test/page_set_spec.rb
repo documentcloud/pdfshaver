@@ -14,10 +14,7 @@ describe PDFium::PageSet do
   end
   
   describe "Document PageSet Interface" do
-    it "should have an iterator" do
-      pages = @document.pages # should be an enumerator of pages.
-      pages.must_be_instance_of PDFium::PageSet
-    end
+    it { @document.pages.must_be_instance_of PDFium::PageSet }
     
     it "should have accessors to specific pages" do
       @document.pages[0].must_equal PDFium::Page.new(@document, 1)

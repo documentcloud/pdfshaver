@@ -41,12 +41,17 @@ module PDFium
     end
     
     private
-    def enumerator
-      @enumerator ||= Enumerator.new do |yielder|
-        Range.new(1, self.document.length).each do |page_number|
+    def enumerator(possible_page_numbers)
+      page_numbers = extract_page_numbers possible_page_numbers
+      Enumerator.new do |yielder|
+        page_numbers.each do |page_number|
           yielder.yield Page.new(self.document, page_number)
         end
       end
+    end
+    
+    def extract_page_numbers(inputs)
+      numbers = Range.new(1,self.document.length)
     end
   end
 end
