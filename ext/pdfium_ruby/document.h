@@ -46,6 +46,6 @@ class Document {
 static void destroy_document_when_safe(Document* document);
 
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self);
-VALUE document_allocate(VALUE rb_PDFium_Document);
+VALUE document_allocate(VALUE rb_PDFShaver_Document);
 
 #endif // __DOCUMENT_H__

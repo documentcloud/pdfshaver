@@ -1,20 +1,20 @@
 require File.expand_path(File.join(File.dirname(__FILE__),'spec_helper'))
 
-describe PDFium::Document do
+describe PDFShaver::Document do
   
   it "should be instantiated" do
     path = File.join(FIXTURES, 'uncharter.pdf')
-    PDFium::Document.new(path).must_be_instance_of PDFium::Document
+    PDFShaver::Document.new(path).must_be_instance_of PDFShaver::Document
   end
   
   it "should throw an error if path can't be found" do
-    Proc.new{ PDFium::Document.new("suede shoes") }.must_raise ArgumentError
+    Proc.new{ PDFShaver::Document.new("suede shoes") }.must_raise ArgumentError
   end
   
   describe "instance methods" do
     before do
       @path = File.join(FIXTURES, 'uncharter.pdf')
-      @document = PDFium::Document.new(@path)
+      @document = PDFShaver::Document.new(@path)
     end
     
     it "should have a length" do
@@ -22,8 +22,8 @@ describe PDFium::Document do
     end
     
     it { @document.must_equal @document }
-    it { @document.must_equal PDFium::Document.new(@path) }
-    it { @document.wont_equal PDFium::Document.new(File.join(FIXTURES, 'letter-to-canadians-from-jack-layton.pdf')) }
+    it { @document.must_equal PDFShaver::Document.new(@path) }
+    it { @document.wont_equal PDFShaver::Document.new(File.join(FIXTURES, 'letter-to-canadians-from-jack-layton.pdf')) }
   end
   
 end

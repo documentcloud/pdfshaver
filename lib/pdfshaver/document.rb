@@ -1,4 +1,4 @@
-module PDFium
+module PDFShaver
   class Document
     attr_reader :length, :path
     

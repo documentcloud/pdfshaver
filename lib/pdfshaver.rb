@@ -6,6 +6,6 @@ end
   page
   version
 ].each do |file|
-  require_relative File.join('pdfium', file)
+  require_relative File.join('pdfshaver', file)
 end
 require_relative 'pdfium_ruby'

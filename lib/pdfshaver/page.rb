@@ -1,9 +1,9 @@
-module PDFium
+module PDFShaver
   class Page
     attr_reader :document, :width, :height, :aspect, :number, :index
     
     def initialize document, number, options={}
-      raise ArgumentError unless document.kind_of? PDFium::Document
+      raise ArgumentError unless document.kind_of? PDFShaver::Document
       raise ArgumentError unless number.kind_of? Integer
       raise ArgumentError unless number > 0 and number <= document.length
       

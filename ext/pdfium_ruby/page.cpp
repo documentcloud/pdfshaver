@@ -119,20 +119,20 @@ Page::~Page() {
 *********************************************/
 
 void Define_Page() {
-  // Get the PDFium namespace and get the `Page` class inside it.
-  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
-  VALUE rb_PDFium_Page = rb_const_get(rb_PDFium, rb_intern("Page"));
+  // Get the PDFShaver namespace and get the `Page` class inside it.
+  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  VALUE rb_PDFShaver_Page = rb_const_get(rb_PDFShaver, rb_intern("Page"));
   
-  rb_define_alloc_func(rb_PDFium_Page, *page_allocate);
+  rb_define_alloc_func(rb_PDFShaver_Page, *page_allocate);
   
-  rb_define_method(rb_PDFium_Page, "render", CPP_RUBY_METHOD_FUNC(page_render), -1);
-  rb_define_private_method(rb_PDFium_Page, "initialize_page_internals", 
+  rb_define_method(rb_PDFShaver_Page, "render", CPP_RUBY_METHOD_FUNC(page_render), -1);
+  rb_define_private_method(rb_PDFShaver_Page, "initialize_page_internals", 
                             CPP_RUBY_METHOD_FUNC(initialize_page_internals),-1);
 }
 
-VALUE page_allocate(VALUE rb_PDFium_Page) {
+VALUE page_allocate(VALUE rb_PDFShaver_Page) {
   Page* page = new Page();
-  return Data_Wrap_Struct(rb_PDFium_Page, NULL, destroy_page, page);
+  return Data_Wrap_Struct(rb_PDFShaver_Page, NULL, destroy_page, page);
 }
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
@@ -165,9 +165,9 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   VALUE rb_document, page_index, options;
   int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_index, &options);
   
-  // Get the PDFium namespace and get the `Page` class inside it.
-  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
-  VALUE rb_PDFium_Page = rb_const_get(rb_PDFium, rb_intern("Page"));
+  // Get the PDFShaver namespace and get the `Page` class inside it.
+  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  VALUE rb_PDFShaver_Page = rb_const_get(rb_PDFShaver, rb_intern("Page"));
   
   Document* document;
   Data_Get_Struct(rb_document, Document, document);

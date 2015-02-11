@@ -1,12 +1,12 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'pdfium/version'
+require 'pdfshaver/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'pdfium'
-  s.version     = PDFium::VERSION
+  s.name        = 'pdfshaver'
+  s.version     = PDFShaver::VERSION
   s.licenses    = ['MIT']
-  s.summary     = "PDF processing with PDFium"
+  s.summary     = "Slice pages off of PDFs as images"
   s.authors     = ["Ted Han", "Nathan Stitt"]
   s.email       = 'opensource@documentcloud.org'
   s.files       = Dir.glob %w[
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
     ext/**
     test/**
     Gemfile
-    pdfium.gemspec
+    pdfshaver.gemspec
     Rakefile
     Readme.md
   ]

@@ -56,26 +56,26 @@ void Document::destroyUnlessPagesAreOpen() {
 *********************************************/
 
 void Define_Document() {
-  // Get the PDFium namespace and get the `Document` class inside it.
-  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
-  VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Document"));
+  // Get the PDFShaver namespace and get the `Document` class inside it.
+  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  VALUE rb_PDFShaver_Document = rb_const_get(rb_PDFShaver, rb_intern("Document"));
   
-  rb_define_alloc_func(rb_PDFium_Document, *document_allocate);
+  rb_define_alloc_func(rb_PDFShaver_Document, *document_allocate);
   
-  rb_define_private_method(rb_PDFium_Document, "open_document_with_pdfium", 
+  rb_define_private_method(rb_PDFShaver_Document, "open_document_with_pdfium", 
                             CPP_RUBY_METHOD_FUNC(initialize_document_internals), -1);
 };
 
-VALUE document_allocate(VALUE rb_PDFium_Document) {
+VALUE document_allocate(VALUE rb_PDFShaver_Document) {
   Document* document = new Document();
-  return Data_Wrap_Struct(rb_PDFium_Document, NULL, destroy_document_when_safe, document);
+  return Data_Wrap_Struct(rb_PDFShaver_Document, NULL, destroy_document_when_safe, document);
 }
 
-// Entry point for PDFium::Document's ruby initializer into C++ land
+// Entry point for PDFShaver::Document's ruby initializer into C++ land
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
-  // Get the PDFium namespace and get the `Document` class inside it.
-  VALUE rb_PDFium = rb_const_get(rb_cObject, rb_intern("PDFium"));
-  VALUE rb_PDFium_Document = rb_const_get(rb_PDFium, rb_intern("Document"));
+  // Get the PDFShaver namespace and get the `Document` class inside it.
+  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  VALUE rb_PDFShaver_Document = rb_const_get(rb_PDFShaver, rb_intern("Document"));
   
   // use Ruby's argument scanner to pull out a required
   // `path` argument and an optional `options` hash.

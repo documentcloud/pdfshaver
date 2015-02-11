@@ -7,4 +7,4 @@ FIXTURES = File.join(HERE, 'fixtures')
 OUTPUT = File.join(HERE, 'output')
 FileUtils.mkdir_p OUTPUT
 
-require File.join(HERE, '..', 'lib', 'pdfium')
+require File.join(HERE, '..', 'lib', 'pdfshaver')
