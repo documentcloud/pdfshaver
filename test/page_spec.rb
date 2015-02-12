@@ -29,7 +29,7 @@ describe PDFShaver::Page do
       @page = PDFShaver::Page.new(@document, 1)
       @output_path = File.join OUTPUT, 'image_render_test.gif'
     end
-
+    
     it "should have the right width, height and aspect ratio" do
       @page.width.must_be_kind_of Integer
       @page.height.must_be_kind_of Integer
@@ -61,6 +61,12 @@ describe PDFShaver::Page do
     it "should render an image and write it out to disk" do
       @page.render(@output_path).must_equal true
       File.exists?(@output_path).must_equal true
+    end
+    
+    it "should throw an error when saving to an unrecognized file type" do
+      fail_path = File.join(OUTPUT, "this_will_never_be.a_valid_filetype")
+      Proc.new{ @page.render(fail_path) }.must_raise ArgumentError
+      File.exists?(fail_path).must_equal false
     end
     
     it "should raise an error if output path is missing" do

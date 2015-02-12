@@ -154,6 +154,9 @@ VALUE page_render(int arg_count, VALUE* args, VALUE self) {
       else { rb_raise(rb_eArgError, ":height must be a integer"); }
     }
   }
+
+  FREE_IMAGE_FORMAT format = FreeImage_GetFIFFromFilename(StringValuePtr(path));
+  if (format == FIF_UNKNOWN) { rb_raise(rb_eArgError, "can't save to unrecognized image format"); }
   
   Page* page;
   Data_Get_Struct(self, Page, page);
