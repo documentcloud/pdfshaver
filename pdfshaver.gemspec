@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = 'pdfshaver'
   s.version     = PDFShaver::VERSION
   s.licenses    = ['MIT']
-  s.summary     = "Slice pages off of PDFs as images"
+  s.summary     = "Shave pages off of PDFs as images"
   s.authors     = ["Ted Han", "Nathan Stitt"]
   s.email       = 'opensource@documentcloud.org'
   s.files       = Dir.glob %w[
