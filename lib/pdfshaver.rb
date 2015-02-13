@@ -1,4 +1,4 @@
-module PDFium
+module PDFShaver
 end
 
 %w[
@@ -6,7 +6,5 @@ end
   page
   page_set
   version
-].each do |file|
-  require_relative File.join('pdfshaver', file)
-end
+].each { |file| require_relative File.join('pdfshaver', file) }
 require_relative 'pdfium_ruby'
