@@ -13,6 +13,12 @@ describe PDFShaver::PageSet do
     pages.must_respond_to(:each)
   end
   
+  it "should iterate all pages by default" do
+    counter = 0
+    PDFShaver::PageSet.new(@document).each{ |page| counter += 1 }
+    counter.must_equal @document.length
+  end
+  
   describe "Document PageSet Interface" do
     it { @document.pages.must_be_instance_of PDFShaver::PageSet }
     

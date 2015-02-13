@@ -41,7 +41,7 @@ module PDFShaver
     end
     
     private
-    def enumerator(possible_page_numbers)
+    def enumerator(possible_page_numbers="")
       page_numbers = extract_page_numbers possible_page_numbers
       Enumerator.new do |yielder|
         page_numbers.each do |page_number|
@@ -50,7 +50,7 @@ module PDFShaver
       end
     end
     
-    def extract_page_numbers(inputs)
+    def extract_page_numbers(inputs="")
       numbers = Range.new(1,self.document.length)
     end
   end
