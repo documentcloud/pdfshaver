@@ -9,8 +9,10 @@ Gem::Specification.new do |s|
   s.summary     = "Shave pages off of PDFs as images"
   s.authors     = ["Ted Han", "Nathan Stitt"]
   s.email       = 'opensource@documentcloud.org'
+  s.extensions = 'ext/pdfium_ruby/extconf.rb'
   s.files       = Dir.glob %w[
-    lib/**/*
+    lib/pdfshaver.rb
+    lib/*/**/*
     ext/**/*
     test/**/*
     Gemfile
