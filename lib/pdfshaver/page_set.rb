@@ -16,6 +16,14 @@ module PDFShaver
       Page.new(@document, page_index+1)
     end
     
+    def first
+      Page.new(@document, 1)
+    end
+    
+    def last
+      Page.new(@document, @document.length)
+    end
+    
     private
     def enumerator(possible_page_numbers="")
       page_numbers = extract_page_numbers possible_page_numbers
