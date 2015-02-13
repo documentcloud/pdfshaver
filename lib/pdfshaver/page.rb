@@ -29,11 +29,12 @@ module PDFShaver
 
     attr_reader :document
     def initialize document, page_list=:all, options={}
+      @page_list = page_list
       @document = document
     end
     
     def each(&block)
-      enumerator.each(&block)
+      enumerator(@page_list).each(&block)
     end
     
     def [](page_index)
@@ -51,6 +52,7 @@ module PDFShaver
     end
     
     def extract_page_numbers(inputs="")
+      return inputs if inputs.kind_of? Range
       numbers = Range.new(1,self.document.length)
     end
   end
