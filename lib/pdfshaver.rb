@@ -1,5 +1,7 @@
 module PDFShaver
   class EncryptionError < StandardError; end
+  class InvalidFormatError < StandardError; end
+  class MissingHandlerError < StandardError; end
 end
 
 %w[
