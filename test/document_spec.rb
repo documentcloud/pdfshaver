@@ -11,6 +11,13 @@ describe PDFShaver::Document do
     Proc.new{ PDFShaver::Document.new("suede shoes") }.must_raise ArgumentError
   end
   
+  it "should throw an error if a document can't be opened" do
+    Proc.new do
+      path = File.join(FIXTURES, 'completely_encrypted.pdf')
+      PDFShaver::Document.new(path)
+    end.must_raise PDFShaver::EncryptionError
+  end
+  
   describe "instance methods" do
     before do
       @path = File.join(FIXTURES, 'uncharter.pdf')

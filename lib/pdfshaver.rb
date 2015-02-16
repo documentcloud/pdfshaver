@@ -1,4 +1,5 @@
 module PDFShaver
+  class EncryptionError < StandardError; end
 end
 
 %w[
