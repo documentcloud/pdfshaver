@@ -23,6 +23,8 @@ class Document {
     // wrapper for PDFium's pageCount
     int length();
     
+    bool isValid();
+    
     // flag to set instances as ready to be disposed of
     // pending ensuring all its pages have been first closed.
     void flagDocumentAsReadyForRelease();

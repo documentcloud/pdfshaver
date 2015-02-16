@@ -23,12 +23,14 @@ int Document::load(VALUE path) {
   this->fpdf_document = FPDF_LoadDocument(StringValuePtr(path), NULL);
   int parse_status = FPDF_GetLastError();
   // indicate that Ruby is still using this document.
-  this->opened = !!(this->fpdf_document);
+  this->opened = this->isValid();
   this->ready_to_be_freed = false;
   return parse_status;
 }
 
 int Document::length() { return FPDF_GetPageCount(this->fpdf_document); }
+
+bool Document::isValid() { return !!(this->fpdf_document); }
 
 void Document::flagDocumentAsReadyForRelease() { this->ready_to_be_freed = true; }
 
@@ -87,8 +89,8 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
   Document* document;
   Data_Get_Struct(self, Document, document);
   int parse_status = document->load(path);
-  document_handle_parse_status(parse_status, path);
-  //if (!document->isValid()) { rb_raise(rb_eArgError, "Failed to load: %s", StringValuePtr(path)); }
+  //document_handle_parse_status(parse_status, path);
+  if (!document->isValid()) { rb_raise(rb_eArgError, "failed to open file (%" PRIsVALUE")", path); }
   
   // get the document length and store it as an instance variable on the class.
   rb_ivar_set(self, rb_intern("@length"), INT2FIX(document->length()));

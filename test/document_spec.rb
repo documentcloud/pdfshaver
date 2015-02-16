@@ -15,7 +15,7 @@ describe PDFShaver::Document do
     Proc.new do
       path = File.join(FIXTURES, 'completely_encrypted.pdf')
       PDFShaver::Document.new(path)
-    end.must_raise PDFShaver::EncryptionError
+    end.must_raise ArgumentError
   end
   
   describe "instance methods" do
