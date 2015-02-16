@@ -3,7 +3,6 @@
 /********************************************
 * C++ Document definition
 *********************************************/
-
 Document::Document() {
   // Initialize state variables
   // to mark whether document has been used
@@ -18,14 +17,15 @@ Document::~Document() {
   if (this->opened) { FPDF_CloseDocument(this->fpdf_document); }
 }
 
-bool Document::load(VALUE path) {
+int Document::load(VALUE path) {
   // load the document via PDFium.
   // returns false if loading document fails.
   this->fpdf_document = FPDF_LoadDocument(StringValuePtr(path), NULL);
+  int parse_status = FPDF_GetLastError();
   // indicate that Ruby is still using this document.
   this->opened = !!(this->fpdf_document);
   this->ready_to_be_freed = false;
-  return this->opened;
+  return parse_status;
 }
 
 int Document::length() { return FPDF_GetPageCount(this->fpdf_document); }
@@ -86,12 +86,41 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
   // path should at this point be validated & known to exist.
   Document* document;
   Data_Get_Struct(self, Document, document);
-  document->load(path);
+  int parse_status = document->load(path);
+  document_handle_parse_status(parse_status, path);
   //if (!document->isValid()) { rb_raise(rb_eArgError, "Failed to load: %s", StringValuePtr(path)); }
   
   // get the document length and store it as an instance variable on the class.
   rb_ivar_set(self, rb_intern("@length"), INT2FIX(document->length()));
   return self;
+}
+
+void document_handle_parse_status(int status, VALUE path) {
+  //printf("\nSTATUS: %d\n", status);
+  VALUE rb_PDFShaver            = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  VALUE rb_eEncryptionError     = rb_const_get(rb_PDFShaver, rb_intern("EncryptionError"));
+  VALUE rb_eInvalidFormatError  = rb_const_get(rb_PDFShaver, rb_intern("InvalidFormatError"));
+  VALUE rb_eMissingHandlerError = rb_const_get(rb_PDFShaver, rb_intern("MissingHandlerError"));
+  
+  switch (status) {
+    case PDFPARSE_ERROR_SUCCESS:
+      break;
+    case PDFPARSE_ERROR_FILE:
+      rb_raise(rb_eArgError, "unable to open file (%" PRIsVALUE")", path);
+      break;
+    case PDFPARSE_ERROR_FORMAT:
+      rb_raise(rb_eInvalidFormatError, "file (%" PRIsVALUE") is not a valid PDF", path);
+      break; 	
+    case PDFPARSE_ERROR_PASSWORD:
+      rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
+      break;
+    case PDFPARSE_ERROR_CERT:
+      rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
+      break;
+    case PDFPARSE_ERROR_HANDLER:
+      rb_raise(rb_eMissingHandlerError, "could not find handler for media objects in file (%" PRIsVALUE")", path);
+      break; 
+  }
 }
 
 static void destroy_document_when_safe(Document* document) {

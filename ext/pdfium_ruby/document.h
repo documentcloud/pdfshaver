@@ -5,6 +5,7 @@
 class Page;
 #include "pdfium_ruby.h"
 #include "fpdf_ext.h"
+#include "core/include/fpdfapi/fpdf_parser.h"
 #include "page.h"
 #include <unordered_set>
 
@@ -17,11 +18,10 @@ class Document {
     // constructor
     Document();
     
-    bool load(VALUE path);
+    int load(VALUE path);
     
     // wrapper for PDFium's pageCount
     int length();
-    
     
     // flag to set instances as ready to be disposed of
     // pending ensuring all its pages have been first closed.
@@ -47,5 +47,5 @@ static void destroy_document_when_safe(Document* document);
 
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self);
 VALUE document_allocate(VALUE rb_PDFShaver_Document);
-
+void document_handle_parse_status(int status, VALUE path);  
 #endif // __DOCUMENT_H__
