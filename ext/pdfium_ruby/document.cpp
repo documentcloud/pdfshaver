@@ -104,25 +104,25 @@ void document_handle_parse_status(int status, VALUE path) {
   VALUE rb_eInvalidFormatError  = rb_const_get(rb_PDFShaver, rb_intern("InvalidFormatError"));
   VALUE rb_eMissingHandlerError = rb_const_get(rb_PDFShaver, rb_intern("MissingHandlerError"));
   
-  switch (status) {
-    case PDFPARSE_ERROR_SUCCESS:
-      break;
-    case PDFPARSE_ERROR_FILE:
-      rb_raise(rb_eArgError, "unable to open file (%" PRIsVALUE")", path);
-      break;
-    case PDFPARSE_ERROR_FORMAT:
-      rb_raise(rb_eInvalidFormatError, "file (%" PRIsVALUE") is not a valid PDF", path);
-      break; 	
-    case PDFPARSE_ERROR_PASSWORD:
-      rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
-      break;
-    case PDFPARSE_ERROR_CERT:
-      rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
-      break;
-    case PDFPARSE_ERROR_HANDLER:
-      rb_raise(rb_eMissingHandlerError, "could not find handler for media objects in file (%" PRIsVALUE")", path);
-      break; 
-  }
+  //switch (status) {
+  //  case PDFPARSE_ERROR_SUCCESS:
+  //    break;
+  //  case PDFPARSE_ERROR_FILE:
+  //    rb_raise(rb_eArgError, "unable to open file (%" PRIsVALUE")", path);
+  //    break;
+  //  case PDFPARSE_ERROR_FORMAT:
+  //    rb_raise(rb_eInvalidFormatError, "file (%" PRIsVALUE") is not a valid PDF", path);
+  //    break; 	
+  //  case PDFPARSE_ERROR_PASSWORD:
+  //    rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
+  //    break;
+  //  case PDFPARSE_ERROR_CERT:
+  //    rb_raise(rb_eEncryptionError, "file (%" PRIsVALUE") is encrypted", path);
+  //    break;
+  //  case PDFPARSE_ERROR_HANDLER:
+  //    rb_raise(rb_eMissingHandlerError, "could not find handler for media objects in file (%" PRIsVALUE")", path);
+  //    break; 
+  //}
 }
 
 static void destroy_document_when_safe(Document* document) {
