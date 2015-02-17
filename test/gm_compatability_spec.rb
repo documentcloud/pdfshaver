@@ -67,11 +67,13 @@ describe "Resize arguments" do
       h = @page.height.to_i
       base = Size.new(w,h)
       {
-        "#{w}x#{h}" => base,
+        "#{w}x#{h}"        => base,
         "#{(w*0.5).to_i}x" => base.scale(0.5),
-        "x#{h*2}"   => base.scale(2),
-        "100x100!"  => Size.new(100, 100)
+        "x#{h*2}"          => base.scale(2),
+        "100x100!"         => Size.new(100, 100),
+        "200x200@"         => Size.new(176, 227)
       }.each do |input, expected|
+        #puts "#{input} : #{expected.inspect}"
         output = @page.extract_dimensions_from_gm_geometry_string(input)
         dimensions = Size.new(output[:width], output[:height])
         dimensions.width.must_equal expected.width

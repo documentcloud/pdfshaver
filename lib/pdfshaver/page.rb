@@ -1,6 +1,6 @@
 module PDFShaver
   class Page
-    GM_MATCHER = /^\s*((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>[@%!<>]+)?\s*$/
+    GM_MATCHER = /^\s*((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>[@%!<>^]+)?\s*$/
     attr_reader :document, :width, :height, :aspect, :number, :index
     
     def initialize document, number, options={}
@@ -28,21 +28,84 @@ module PDFShaver
       dimensions = {}
       arg.match(GM_MATCHER) do |match|
         
-        puts match.inspect
+        # grab parsed tokens
+        requested_width    = match[:width].to_f unless match[:width].nil? 
+        requested_height   = match[:height].to_f unless match[:height].nil? 
+        modifier = match[:modifier] || ""
         
-        width    = match[:width].to_i unless match[:width].nil? 
-        height   = match[:height].to_i unless match[:height].nil? 
-        modifier = match[:modifier]
-        
-        case modifier
-        when '%'
-        when '@'
-        when '<'
-        when '>'
+        # Algorithm ported from GraphicsMagick's GetMagickGeometry function.
+        # the '@' option precludes all other options.
+        if modifier.include? '@'
+          # calculate the current page area
+          # and the specified target area for comparison
+          current_area = self.width * self.height
+          target_area  = (requested_width || 1) * (requested_height || 1)
+          
+          resize = if modifier.include? '>'
+            current_area > target_area
+          elsif modifier.include? '<'
+            current_area < target_area
+          else
+            true
+          end
+          
+          if resize
+            scale = 1.0 / Math.sqrt(current_area/target_area)
+            dimensions[:width]  = (self.width*scale+0.25).floor
+            dimensions[:height] = (self.height*scale+0.25).floor
+          end
+        else
+          width = requested_width
+          height = requested_height
+          
+          if width and not height
+            height = (width/self.aspect+0.5).floor
+          elsif height and not width
+            width  = (self.aspect*height+0.5).floor
+          end
+          
+          if modifier.include? '%'
+            x_scale = width
+            y_scale = height
+            x_scale = y_scale if requested_width.nil? or requested_height.nil?
+            width   = ((self.width * x_scale / 100.0) +0.5).floor
+            height  = ((self.height * y_scale / 100.0) +0.5).floor
+          end
+          
+          if modifier.include? '!' and ((width != self.width) || (height != self.height))
+            if (requested_width == 0) || (requested_height == 0)
+              scale = 1.0
+            else
+              width_ratio  = width / self.width
+              height_ratio = height / self.height
+              scale = width_ratio
+              
+              if modifier.include? '^'
+                scale = height_ratio if width_ratio < height_ratio
+              else
+                scale = height_ratio if width_ratio > height_ratio
+              end
+            end
+            
+            width  = (scale*self.width+0.5).floor
+            height = (scale*self.height+0.5).floor
+          end
+          
+          if modifier.include? '>'
+            width  = self.width  if self.width  < width
+            height = self.height if self.height < height
+          end
+          
+          if modifier.include? '<'
+            width  = self.width  if self.width  > width
+            height = self.height if self.height > height
+          end
+          
+          dimensions[:width]  = width
+          dimensions[:height] = height
         end
-        
-        dimensions[:width]  = width || 0
-        dimensions[:height] = height || 0
+        dimensions[:width]  ||= self.width
+        dimensions[:height] ||= self.height
         return dimensions
       end
       
