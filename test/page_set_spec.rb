@@ -5,6 +5,8 @@ describe PDFShaver::PageSet do
   before do
     path = File.join(FIXTURES, 'uncharter.pdf')
     @document = PDFShaver::Document.new(path)
+    @first_half_range = Range.new(1, @document.length/2)
+    @last_half_range = Range.new(@document.length/2, @document.length)
   end
   
   it "should be an enumerable collection of pages" do
@@ -21,8 +23,15 @@ describe PDFShaver::PageSet do
   
   it "should iterate through a specified list of pages" do
     counter = 0
-    PDFShaver::PageSet.new(@document, Range.new(1, @document.length/2)).each{ |page| counter += 1 }
+    PDFShaver::PageSet.new(@document, @first_half_range).each{ |page| counter += 1 }
     counter.must_equal @document.length/2
+  end
+  
+  it "should provide an accessor, #first and #last to specify the set" do
+    pages = PDFShaver::PageSet.new(@document, @last_half_range)
+    pages.first.must_equal PDFShaver::Page.new(@document, @last_half_range.first)
+    pages.last.must_equal  PDFShaver::Page.new(@document, @last_half_range.last)
+    pages[1].must_equal    PDFShaver::Page.new(@document, @last_half_range.first+1)
   end
   
   describe "Document PageSet Interface" do
