@@ -9,34 +9,67 @@ module PDFShaver
     end
     
     def each(&block)
-      enumerator(@page_list).each(&block)
+      enumerator.each(&block)
     end
     
     def [](page_index)
-      Page.new(@document, page_index+1)
+      Page.new(@document, @page_list.to_a[page_index])
     end
     
     def first
-      Page.new(@document, 1)
+      Page.new(@document, @page_list.first)
     end
     
     def last
-      Page.new(@document, @document.length)
+      Page.new(@document, @page_list.last)
     end
     
     private
-    def enumerator(possible_page_numbers="")
-      page_numbers = extract_page_numbers possible_page_numbers
+    def enumerator
       Enumerator.new do |yielder|
-        page_numbers.each do |page_number|
+        @page_list.each do |page_number|
           yielder.yield Page.new(self.document, page_number)
         end
       end
     end
     
-    def extract_page_numbers(inputs="")
-      return inputs if inputs.kind_of? Range
-      numbers = Range.new(1,self.document.length)
+    def extract_page_numbers(inputs)
+      case inputs
+      when :all
+        Range.new(1,self.document.length)
+      when Range
+        unless valid_page_range?(inputs)
+          raise ArgumentError, "#{inputs} did not fall in a valid range of pages (#{1..self.document.length})"
+        end
+        inputs
+      when Array
+        numbers = []
+        inputs.flatten.each do |input|
+          case
+          when valid_page_number?(input) then numbers.push input
+          when valid_page_range?(input)  then numbers += input.to_a
+          when valid_page_string?(input) then 
+          else raise ArgumentError, "#{input} is not a valid page or list of pages (as part of #{inputs})"
+          end
+        end
+        numbers
+      when String
+        valid_page_string?(inputs)
+      else 
+        raise ArgumentError, "#{inputs.inspect} is not a valid list of pages"
+      end
+    end
+    
+    def valid_page_number?(number)
+      number.kind_of?(Numeric) and number > 0 and number <= self.document.length
+    end
+    
+    def valid_page_range?(range)
+      range.kind_of?(Range) and valid_page_number?(range.first) and valid_page_number?(range.last)
+    end
+    
+    def valid_page_string?(input)
+      raise ArgumentError, "todo: support strings as page specifiers"
     end
   end
 end
