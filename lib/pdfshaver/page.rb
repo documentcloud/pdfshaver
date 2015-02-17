@@ -1,5 +1,6 @@
 module PDFShaver
   class Page
+    GM_MATCHER = /^((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>%|@|<|>)?$/
     attr_reader :document, :width, :height, :aspect, :number, :index
     
     def initialize document, number, options={}
@@ -21,6 +22,31 @@ module PDFShaver
     def <=> other
       raise ArgumentError, "unable to compare #{self.class} with #{other.class}" unless other.kind_of? self.class
       self.index <=> other.index
+    end
+    
+    def self.extract_dimensions_from_gm_geometry_string(arg)
+      dimensions = {}
+      arg.match(GM_MATCHER) do |match|
+        
+        puts match.inspect
+        
+        width    = match[:width].to_i unless match[:width].nil? 
+        height   = match[:height].to_i unless match[:height].nil? 
+        modifier = match[:modifier]
+        
+        case modifier
+        when '%'
+        when '@'
+        when '<'
+        when '>'
+        end
+        
+        dimensions[:width]  = width || 0
+        dimensions[:height] = height || 0
+        return dimensions
+      end
+      
+      raise ArgumentError, "unable to extract width & height from '#{arg}'"
     end
   end
 end
