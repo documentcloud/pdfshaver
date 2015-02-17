@@ -4,8 +4,8 @@ module PDFShaver
 
     attr_reader :document
     def initialize document, page_list=:all, options={}
-      @page_list = page_list
       @document = document
+      @page_list = extract_page_numbers(page_list)
     end
     
     def each(&block)
