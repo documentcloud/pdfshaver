@@ -1,6 +1,6 @@
 module PDFShaver
   class Page
-    GM_MATCHER = /^((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>%|@|<|>)?$/
+    GM_MATCHER = /^\s*((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>[@%!<>]+)?\s*$/
     attr_reader :document, :width, :height, :aspect, :number, :index
     
     def initialize document, number, options={}
@@ -24,7 +24,7 @@ module PDFShaver
       self.index <=> other.index
     end
     
-    def self.extract_dimensions_from_gm_geometry_string(arg)
+    def extract_dimensions_from_gm_geometry_string(arg)
       dimensions = {}
       arg.match(GM_MATCHER) do |match|
         

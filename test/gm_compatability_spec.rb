@@ -40,10 +40,10 @@ describe "Resize arguments" do
         "112x%"    => TokenSet.new("112", nil,   "%"),
       }
     
-      inputs.each do |input, expected| 
+      inputs.each do |input, expected|
         input.must_match(PDFShaver::Page::GM_MATCHER)
         match = input.match(PDFShaver::Page::GM_MATCHER)
-        TokenSet::KEYS.each{ |key| expected[key].must_equal match[key] }
+        TokenSet::KEYS.each{ |key| match[key].must_equal expected[key] }
       end
     end
   end
@@ -72,7 +72,7 @@ describe "Resize arguments" do
         "x#{h*2}"   => base.scale(2),
         "100x100!"  => Size.new(100, 100)
       }.each do |input, expected|
-        output = PDFShaver::Page.extract_dimensions_from_gm_geometry_string(input)
+        output = @page.extract_dimensions_from_gm_geometry_string(input)
         dimensions = Size.new(output[:width], output[:height])
         dimensions.width.must_equal expected.width
         dimensions.height.must_equal expected.height
