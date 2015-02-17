@@ -54,25 +54,25 @@ module PDFShaver
           end
           
           if resize
-            puts "RESIZING"
             scale = 1.0 / Math.sqrt(current_area/target_area)
             dimensions[:width]  = (self.width*scale+0.25).floor
             dimensions[:height] = (self.height*scale+0.25).floor
           end
-        else
+        else # Handle all of the non area modes.
           width = requested_width
           height = requested_height
           
+          # when supplied with only a width or a height
+          # infer the other using the page's aspect ratio.
           if width and not height
-            puts "MISSING HEIGHT"
             height = (width/self.aspect+0.5).floor
           elsif height and not width
-            puts "MISSING WIDTH"
-            width  = (self.aspect*height+0.5).floor
+            width  = (self.width.to_f/self.height*height+0.5).floor
           end
           
+          # If proportional mode is requested
+          # 
           if modifier.include? '%'
-            puts "PERCENT DIMENSIONS"
             x_scale = width
             y_scale = height
             x_scale = y_scale if requested_width.nil? or requested_height.nil?
@@ -84,7 +84,6 @@ module PDFShaver
           end
           
           if modifier.include? '!' and ((width != requested_width) || (height != requested_height))
-            puts "BANG DIMENSIONS"
             if (requested_width == 0) || (requested_height == 0)
               scale = 1.0
             else
@@ -98,13 +97,11 @@ module PDFShaver
           end
           
           if modifier.include? '>'
-            puts "UPPER BOUND"
             width  = self.width  if self.width  < width
             height = self.height if self.height < height
           end
           
           if modifier.include? '<'
-            puts "LOWER BOUND"
             width  = self.width  if self.width  > width
             height = self.height if self.height > height
           end
