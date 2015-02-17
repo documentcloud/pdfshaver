@@ -81,7 +81,7 @@ describe "Resize arguments" do
       }.each do |input, expected|
         #puts "#{input} : #{expected.inspect}"
         output = @page.extract_dimensions_from_gm_geometry_string(input)
-        puts "#{output.inspect} vs #{expected.inspect}"
+        #puts "#{output.inspect} vs #{expected.inspect}"
         dimensions = Size.new(output[:width], output[:height])
         dimensions.aspect.must_be_within_delta expected.aspect, 0.005
         dimensions.width.must_be_within_delta expected.width, 1

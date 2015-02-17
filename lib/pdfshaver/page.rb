@@ -37,17 +37,14 @@ module PDFShaver
         #
         # the '@' option precludes all other options.
         if modifier.include? '@'
-          print "AREA"
           # calculate the current page area
           # and the specified target area for comparison
           current_area = self.width * self.height
           target_area  = (requested_width || 1) * (requested_height || 1)
           
           resize = if modifier.include? '>'
-            print " with >"
             current_area > target_area
           elsif modifier.include? '<'
-            print " with <"
             current_area < target_area
           else
             true
