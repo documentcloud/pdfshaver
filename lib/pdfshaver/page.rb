@@ -26,6 +26,8 @@ module PDFShaver
     
     def extract_dimensions_from_gm_geometry_string(arg)
       dimensions = {}
+      return dimensions if arg.nil? or arg.empty?
+      raise ArgumentError, "argument is not a String" unless arg.kind_of? String
       arg.match(GM_MATCHER) do |match|
         
         # grab parsed tokens

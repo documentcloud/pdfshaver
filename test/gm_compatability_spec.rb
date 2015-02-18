@@ -62,6 +62,11 @@ describe "Resize arguments" do
       end
     end
   
+    it "should return an empty hash with nil or an empty string" do
+      @page.extract_dimensions_from_gm_geometry_string(nil).must_equal({})
+      @page.extract_dimensions_from_gm_geometry_string("").must_equal({})
+    end
+    
     it "should specify width and height" do
       w = @page.width.to_i
       h = @page.height.to_i
