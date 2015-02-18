@@ -24,6 +24,10 @@ module PDFShaver
       Page.new(@document, @page_list.last)
     end
     
+    def size
+      @page_list.size
+    end
+    
     private
     def enumerator
       Enumerator.new do |yielder|
@@ -37,6 +41,9 @@ module PDFShaver
       case inputs
       when :all
         Range.new(1,self.document.length)
+      when Numeric
+        raise ArgumentError, "#{inputs} is not a valid page number" unless valid_page_number?(inputs)
+        [inputs]
       when Range
         unless valid_page_range?(inputs)
           raise ArgumentError, "#{inputs} did not fall in a valid range of pages (#{1..self.document.length})"
@@ -52,7 +59,7 @@ module PDFShaver
           else raise ArgumentError, "#{input} is not a valid page or list of pages (as part of #{inputs})"
           end
         end
-        numbers
+        numbers.sort
       when String
         valid_page_string?(inputs)
       else 
@@ -65,7 +72,8 @@ module PDFShaver
     end
     
     def valid_page_range?(range)
-      range.kind_of?(Range) and valid_page_number?(range.first) and valid_page_number?(range.last)
+      range.kind_of?(Range) and range.first <= range.last and
+      valid_page_number?(range.first) and valid_page_number?(range.last)
     end
     
     def valid_page_string?(input)

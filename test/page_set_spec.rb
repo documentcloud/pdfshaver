@@ -3,10 +3,10 @@ require File.expand_path(File.join(File.dirname(__FILE__),'spec_helper'))
 describe PDFShaver::PageSet do
 
   before do
-    path = File.join(FIXTURES, 'uncharter.pdf')
-    @document = PDFShaver::Document.new(path)
+    path              = File.join(FIXTURES, 'uncharter.pdf')
+    @document         = PDFShaver::Document.new(path)
     @first_half_range = Range.new(1, @document.length/2)
-    @last_half_range = Range.new(@document.length/2, @document.length)
+    @last_half_range  = Range.new(@document.length/2, @document.length)
   end
   
   it "should be an enumerable collection of pages" do
@@ -25,6 +25,23 @@ describe PDFShaver::PageSet do
     counter = 0
     PDFShaver::PageSet.new(@document, @first_half_range).each{ |page| counter += 1 }
     counter.must_equal @document.length/2
+  end
+  
+  it "should provide a number of ways to express page lists" do
+    { 1           => 1,
+      [1,2,3,5,8] => 5,
+      5..10       => 6,
+      [1, 5..10]  => 7
+    }.each do |list, count| 
+      #puts list.inspect
+      PDFShaver::PageSet.new(@document, list).size.must_equal count
+    end
+  end
+  
+  it "should reject any page value that's out of bounds" do
+    [5000, -1, 5..-5, 10..8].each do|input| 
+      Proc.new{ PDFShaver::PageSet.new(@document, input) }.must_raise ArgumentError
+    end
   end
   
   it "should provide an accessor, #first and #last to specify the set" do
