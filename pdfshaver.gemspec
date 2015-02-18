@@ -4,7 +4,7 @@ require 'pdfshaver/version'
 
 Gem::Specification.new do |s|
   s.name        = 'pdfshaver'
-  s.version     = PDFShaver::VERSION + ".alpha"
+  s.version     = PDFShaver::VERSION + ".alpha1"
   s.licenses    = ['MIT']
   s.summary     = "Shave pages off of PDFs as images"
   s.authors     = ["Ted Han", "Nathan Stitt"]
