@@ -2,9 +2,9 @@ require "mkmf"
 require 'rbconfig'
 # List directories to search for PDFium headers and library files to link against
 def append_pdfium_directory_to paths
-  paths.map do |dir| 
+  paths.map do |dir|
     [
-      File.join(dir, 'pdfium'), 
+      File.join(dir, 'pdfium'),
       File.join(dir, 'pdfium', 'fpdfsdk', 'include'),
       File.join(dir, 'pdfium', 'third_party', 'base', 'numerics')
     ]
@@ -56,13 +56,18 @@ LIB_FILES.each do | lib |
   have_library(lib) or abort "Couldn't find library lib#{lib} in #{LIB_DIRS.join(', ')}"
 end
 
-$CPPFLAGS += " -fPIC -std=c++11"
+$CPPFLAGS += " -fPIC -std=c++11 -Wall"
 if RUBY_PLATFORM =~ /darwin/
   have_library('objc')
   FRAMEWORKS = %w{AppKit CoreFoundation}
   $LDFLAGS << FRAMEWORKS.map { |f| " -framework #{f}" }.join
+end
+
+if ENV['DEBUG'] == '1'
+  $defs.push "-DDEBUG=1"
+  $CPPFLAGS += " -g"
 else
-  #$CPPFLAGS += " -fPIC -std=c++11"
+  $CPPFLAGS += " -O2"
 end
 
 create_makefile "pdfium_ruby"

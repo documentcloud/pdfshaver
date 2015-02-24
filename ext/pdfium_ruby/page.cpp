@@ -168,10 +168,6 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   VALUE rb_document, page_index, options;
   int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_index, &options);
   
-  // Get the PDFShaver namespace and get the `Page` class inside it.
-  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
-  VALUE rb_PDFShaver_Page = rb_const_get(rb_PDFShaver, rb_intern("Page"));
-  
   Document* document;
   Data_Get_Struct(rb_document, Document, document);
   
