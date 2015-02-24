@@ -75,10 +75,6 @@ VALUE document_allocate(VALUE rb_PDFShaver_Document) {
 
 // Entry point for PDFShaver::Document's ruby initializer into C++ land
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
-  // Get the PDFShaver namespace and get the `Document` class inside it.
-  VALUE rb_PDFShaver = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
-  VALUE rb_PDFShaver_Document = rb_const_get(rb_PDFShaver, rb_intern("Document"));
-  
   // use Ruby's argument scanner to pull out a required
   // `path` argument and an optional `options` hash.
   VALUE path, options;
@@ -88,7 +84,8 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
   // path should at this point be validated & known to exist.
   Document* document;
   Data_Get_Struct(self, Document, document);
-  int parse_status = document->load(path);
+  //int parse_status = 
+  document->load(path);
   //document_handle_parse_status(parse_status, path);
   if (!document->isValid()) { rb_raise(rb_eArgError, "failed to open file (%" PRIsVALUE")", path); }
   
@@ -99,10 +96,10 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
 
 void document_handle_parse_status(int status, VALUE path) {
   //printf("\nSTATUS: %d\n", status);
-  VALUE rb_PDFShaver            = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
-  VALUE rb_eEncryptionError     = rb_const_get(rb_PDFShaver, rb_intern("EncryptionError"));
-  VALUE rb_eInvalidFormatError  = rb_const_get(rb_PDFShaver, rb_intern("InvalidFormatError"));
-  VALUE rb_eMissingHandlerError = rb_const_get(rb_PDFShaver, rb_intern("MissingHandlerError"));
+  //VALUE rb_PDFShaver            = rb_const_get(rb_cObject, rb_intern("PDFShaver"));
+  //VALUE rb_eEncryptionError     = rb_const_get(rb_PDFShaver, rb_intern("EncryptionError"));
+  //VALUE rb_eInvalidFormatError  = rb_const_get(rb_PDFShaver, rb_intern("InvalidFormatError"));
+  //VALUE rb_eMissingHandlerError = rb_const_get(rb_PDFShaver, rb_intern("MissingHandlerError"));
   
   //switch (status) {
   //  case PDFPARSE_ERROR_SUCCESS:
