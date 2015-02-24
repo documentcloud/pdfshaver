@@ -24,6 +24,9 @@ module PDFShaver
       self.index <=> other.index
     end
     
+    # This code was written with the GraphicsMagick geometry argument parser
+    # as a direct reference.  Its intent is to provide a compatibility layer
+    # for specifying page geometry that functions identically to graphicsmagick's.
     def extract_dimensions_from_gm_geometry_string(arg)
       dimensions = {}
       return dimensions if arg.nil? or arg.empty?
@@ -44,6 +47,8 @@ module PDFShaver
           current_area = self.width * self.height
           target_area  = (requested_width || 1) * (requested_height || 1)
           
+          # if upper or lower bounds are supplied
+          # check whether the target_area size adheres to that constraint.
           resize = if modifier.include? '>'
             current_area > target_area
           elsif modifier.include? '<'
@@ -52,6 +57,7 @@ module PDFShaver
             true
           end
           
+          # Calculate page dimensions based on area
           if resize
             scale = 1.0 / Math.sqrt(current_area/target_area)
             dimensions[:width]  = (self.width*scale+0.25).floor
@@ -69,8 +75,8 @@ module PDFShaver
             width  = (self.width.to_f/self.height*height+0.5).floor
           end
           
-          # If proportional mode is requested
-          # 
+          # For proportional mode, scales are specified by percent.
+          # Sizes are recalculated and stored as the target width in place for further processing
           if modifier.include? '%'
             x_scale = width
             y_scale = height
