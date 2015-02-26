@@ -23,7 +23,7 @@ PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and for now, in
 
 [pdfium]: https://code.google.com/p/pdfium/
 
-In order install PDFium, you'll need Python, a C++ compiler, `git` and subversion.  All of these tools should be available for your operating system.
+In order install PDFium, you'll need Python, a C++ compiler, FreeImage and `git`.  All of these tools should be available for your operating system.
 
 ### OSX
 
@@ -45,18 +45,14 @@ If you're using a recent Mac, you should already have Python 2.7 installed on yo
 
 If you have homebrew installed simply type `brew install git`
 
-#### subversion
-
-You should already have subversion installed on your mac by default
-
 ### Linux (we'll assume ubuntu or debian)
 
 #### C++ Compiler
 `sudo apt-get install build-essential`
 #### `git`
 `sudo apt-get install git`
-#### subversion
-`sudo apt-get install subversion`
+#### FreeImage
+`sudo apt-get install libfreeimage-dev`
 
 ### Getting PDFium's dependencies
 
