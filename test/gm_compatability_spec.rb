@@ -81,8 +81,8 @@ describe "Resize arguments" do
         "200x200@"         => Size.new(176, 227),
         "1000>"            => base,
         #"1000<"            => Size.new(773, 1000),
-        "500>"             => Size.new(386, 500),
-        "500x>"            => Size.new(500, 647)
+        "500>"             => Size.new(390, 500),
+        "500x>"            => Size.new(500, 640)
       }.each do |input, expected|
         #puts "#{input} : #{expected.inspect}"
         output = @page.extract_dimensions_from_gm_geometry_string(input)
