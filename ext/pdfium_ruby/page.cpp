@@ -190,8 +190,9 @@ VALUE page_render(int arg_count, VALUE* args, VALUE self) {
   
   Page* page;
   Data_Get_Struct(self, Page, page);
-  
+  page_load_data(self);
   VALUE output = (page->render(StringValuePtr(path), width, height) ? Qtrue : Qfalse);
+  page_unload_data(self);
   return output;
 }
 
@@ -207,8 +208,6 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   Data_Get_Struct(self, Page, page);
   
   page->initialize(document, FIX2INT(page_index));
-  page_load_data(self);
-  
   return self;
 }
 

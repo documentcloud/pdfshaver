@@ -23,7 +23,6 @@ end
 def easy_render(page, dir)
   out_path = File.join(dir,"#{page.number}.gif")
   page.render(out_path)
-  page.send(:unload_data)
 end
 
 # A method for testing rendering a variety of pages
