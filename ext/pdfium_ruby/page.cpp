@@ -128,11 +128,25 @@ void Define_Page() {
   rb_define_method(rb_PDFShaver_Page, "render", CPP_RUBY_METHOD_FUNC(page_render), -1);
   rb_define_private_method(rb_PDFShaver_Page, "initialize_page_internals", 
                             CPP_RUBY_METHOD_FUNC(initialize_page_internals),-1);
+  rb_define_private_method(rb_PDFShaver_Page, "load_data",   CPP_RUBY_METHOD_FUNC(page_load_data), 1);
+  rb_define_private_method(rb_PDFShaver_Page, "unload_data", CPP_RUBY_METHOD_FUNC(page_unload_data), 1);
 }
 
 VALUE page_allocate(VALUE rb_PDFShaver_Page) {
   Page* page = new Page();
   return Data_Wrap_Struct(rb_PDFShaver_Page, NULL, destroy_page, page);
+}
+
+VALUE page_load_data(VALUE self) {
+  Page* page;
+  Data_Get_Struct(self, Page, page);
+  return Qtrue;
+}
+
+VALUE page_unload_data(VALUE self) {
+  Page* page;
+  Data_Get_Struct(self, Page, page);
+  return Qtrue;
 }
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {

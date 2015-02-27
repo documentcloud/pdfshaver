@@ -1,7 +1,7 @@
 module PDFShaver
   class Page
     GM_MATCHER = /^\s*((?<width>\d+)x((?<height>\d+))?|x?(?<height>\d+))(?<modifier>[@%!<>^]+)?\s*$/
-    attr_reader :document, :width, :height, :aspect, :number, :index
+    attr_reader :document, :number, :index
     
     def initialize document, number, options={}
       raise ArgumentError unless document.kind_of? PDFShaver::Document
@@ -22,6 +22,35 @@ module PDFShaver
     def <=> other
       raise ArgumentError, "unable to compare #{self.class} with #{other.class}" unless other.kind_of? self.class
       self.index <=> other.index
+    end
+    
+    def height
+      load_dimensions unless @height
+      @height
+    end
+    
+    def width
+      load_dimensions unless @width
+      @width
+    end
+    
+    def aspect
+      load_dimensions unless @aspect
+      @aspect
+    end
+    
+    def load_dimensions
+      with_data_loaded do
+        # don't have to do anything, because loading/unloading page data
+        # will populate our dimensions.
+      end
+    end
+    
+    def with_data_loaded &block
+      raise RuntimeError unless load_data
+      output = yield self
+      raise RuntimeError unless unload_data
+      output
     end
     
     # This code was written with the GraphicsMagick geometry argument parser

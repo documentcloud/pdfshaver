@@ -31,6 +31,8 @@ void Define_Page();
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self);
 VALUE page_render(int arg_count, VALUE* args, VALUE self);
 VALUE page_allocate(VALUE rb_PDFShaver_Page);
+VALUE page_load_data(VALUE rb_PDFShaver_Page);
+VALUE page_unload_data(VALUE rb_PDFShaver_Page);
 static void destroy_page(Page* page);
 
 #endif
