@@ -5,8 +5,11 @@
 * C++ Page definition
 *********************************************/
 
+// Make sure C++ pages, when created are marked as unopened.
 Page::Page() { this->opened = false; }
 
+// When destroying a C++ Page, make sure to
+// dispose of the internals properly.
 Page::~Page() {
   if (this->opened) {
     this->unload();
@@ -17,12 +20,12 @@ Page::~Page() {
 void Page::initialize(Document* document, int page_index) {
   this->document = document;
   this->page_index = page_index;
+  this->document->notifyPageOpened(this);
 }
 
 bool Page::load() {
   if (!this->opened) {
     this->fpdf_page = FPDF_LoadPage(this->document->fpdf_document, this->page_index);
-    this->document->notifyPageOpened(this);
     this->opened = true;
   }
   return this->opened;
