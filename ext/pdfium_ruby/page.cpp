@@ -149,12 +149,16 @@ VALUE page_allocate(VALUE rb_PDFShaver_Page) {
 VALUE page_load_data(VALUE self) {
   Page* page;
   Data_Get_Struct(self, Page, page);
+  if (! page->load() ) { rb_raise(rb_eRuntimeError, "Unable to load page data"); }
+  rb_ivar_set(self, rb_intern("@extension_data_is_loaded"),  Qtrue);
   return Qtrue;
 }
 
 VALUE page_unload_data(VALUE self) {
   Page* page;
   Data_Get_Struct(self, Page, page);
+  page->unload();
+  rb_ivar_set(self, rb_intern("@extension_data_is_loaded"),  Qfalse);
   return Qtrue;
 }
 
@@ -198,7 +202,7 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   Data_Get_Struct(self, Page, page);
   
   page->initialize(document, FIX2INT(page_index));
-  page->load();
+  page_load_data(self);
   
   rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
   rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));

@@ -11,6 +11,7 @@ module PDFShaver
       @number   = number
       @index    = number - 1
       @document = document
+      @extension_data_is_loaded = false
       initialize_page_internals document, @index
     end
     
@@ -47,9 +48,9 @@ module PDFShaver
     end
     
     def with_data_loaded &block
-      raise RuntimeError unless load_data
+      load_data
       output = yield self
-      raise RuntimeError unless unload_data
+      unload_data
       output
     end
     
