@@ -5,3 +5,4 @@ mkmf.log
 *.so
 test/output
 .DS_Store
+output

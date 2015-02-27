@@ -44,7 +44,9 @@ some_number_of = 5 if some_number_of <= 0
 puts "firing up #{some_number_of} forks"
 some_number_of.times do |n|
   fork do 
-    extract('../test/fixtures/uncharter.pdf', n)
+    here = File.dirname(__FILE__)
+    path = File.join(here, '..', 'test', 'fixtures', 'uncharter.pdf')
+    extract(path, n)
   end
 end
 
