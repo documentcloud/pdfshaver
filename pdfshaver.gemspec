@@ -4,26 +4,24 @@ require 'pdfshaver/version'
 
 Gem::Specification.new do |s|
   s.name        = 'pdfshaver'
-  s.version     = PDFShaver::VERSION + ".alpha1"
+  s.version     = PDFShaver::VERSION
   s.licenses    = ['MIT']
   s.summary     = "Shave pages off of PDFs as images"
+  s.description = <<-DESCRIPTION
+  Shave pages off of PDFs as images.  PDFShaver makes iterating PDF pages easy 
+  by wrapping Google Chrome's PDFium library in an enumerable interface.
+  DESCRIPTION
+  s.homepage    = 'https://www.documentcloud.org/opensource'
   s.authors     = ["Ted Han", "Nathan Stitt"]
   s.email       = 'opensource@documentcloud.org'
   s.extensions = 'ext/pdfium_ruby/extconf.rb'
-  s.files       = Dir.glob %w[
-    lib/pdfshaver.rb
-    lib/*/**/*
-    ext/**/*
-    test/**/*
-    Gemfile
-    pdfshaver.gemspec
-    Rakefile
-    Readme.md
-  ]
+  s.files       = `git ls-files -z`.split("\x0")
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.require_paths = ["lib"]
   
-  s.add_development_dependency "bundler", "~> 1.5"
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rake-compiler'
-  s.add_development_dependency 'minitest'
-  s.add_development_dependency 'fastimage'
+  s.add_development_dependency "bundler",       "~> 1.5"
+  s.add_development_dependency 'rake',          "~>10.4"
+  s.add_development_dependency 'rake-compiler', "~>0.9"
+  s.add_development_dependency 'minitest',      "~>5.5"
+  s.add_development_dependency 'fastimage',     "~>1.6"
 end
