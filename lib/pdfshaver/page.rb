@@ -39,14 +39,7 @@ module PDFShaver
       load_dimensions unless @aspect
       @aspect
     end
-    
-    def load_dimensions
-      with_data_loaded do
-        # don't have to do anything, because loading/unloading page data
-        # will populate our dimensions.
-      end
-    end
-    
+
     def with_data_loaded &block
       load_data
       output = yield self
@@ -54,6 +47,15 @@ module PDFShaver
       output
     end
     
+    private
+    def load_dimensions
+      with_data_loaded do
+        # don't have to do anything, because loading/unloading page data
+        # will populate our dimensions.
+      end
+    end
+    
+    public
     # This code was written with the GraphicsMagick geometry argument parser
     # as a direct reference.  Its intent is to provide a compatibility layer
     # for specifying page geometry that functions identically to graphicsmagick's.
