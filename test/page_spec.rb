@@ -108,4 +108,50 @@ describe PDFShaver::Page do
       (width.to_f / height).must_be_within_delta @page.aspect, 0.001
     end
   end
+  
+  describe "lazy loading" do
+    before do
+      @page = PDFShaver::Page.new(@document, 1)
+      @output_path = File.join OUTPUT, 'image_render_test.gif'
+    end
+    
+    it "should be safe to reuse pages" do
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.render(@output_path)
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.render(@output_path)
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+    end
+    
+    it "should not load data until requested" do
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.instance_variable_get("@height").must_equal nil
+      @page.instance_variable_get("@width").must_equal nil
+      @page.instance_variable_get("@aspect").must_equal nil
+      
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.send(:load_dimensions)
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.height.wont_equal nil
+      @page.width.wont_equal nil
+      @page.aspect.wont_equal nil
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+    end
+    
+    it "should provide a scope where data is kept loaded" do
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+      @page.with_data_loaded do
+        @page.instance_variable_get("@extension_data_is_loaded").must_equal true
+      end
+      @page.instance_variable_get("@extension_data_is_loaded").must_equal false
+    end
+    
+    it "shouldn't blow up if nested twice" do
+      @page.with_data_loaded do |p|
+        p.with_data_loaded do |lol|
+          lol
+        end
+      end
+    end
+  end
 end
