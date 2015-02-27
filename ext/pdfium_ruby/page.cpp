@@ -151,6 +151,9 @@ VALUE page_load_data(VALUE self) {
   Data_Get_Struct(self, Page, page);
   if (! page->load() ) { rb_raise(rb_eRuntimeError, "Unable to load page data"); }
   rb_ivar_set(self, rb_intern("@extension_data_is_loaded"),  Qtrue);
+  rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
+  rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));
+  rb_ivar_set(self, rb_intern("@aspect"), rb_float_new(page->aspect()));
   return Qtrue;
 }
 
@@ -187,7 +190,9 @@ VALUE page_render(int arg_count, VALUE* args, VALUE self) {
   
   Page* page;
   Data_Get_Struct(self, Page, page);
-  return (page->render(StringValuePtr(path), width, height) ? Qtrue : Qfalse);
+  
+  VALUE output = (page->render(StringValuePtr(path), width, height) ? Qtrue : Qfalse);
+  return output;
 }
 
 VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
@@ -203,10 +208,6 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   
   page->initialize(document, FIX2INT(page_index));
   page_load_data(self);
-  
-  rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
-  rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));
-  rb_ivar_set(self, rb_intern("@aspect"), rb_float_new(page->aspect()));
   
   return self;
 }
