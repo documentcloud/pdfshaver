@@ -10,7 +10,9 @@ class Page {
   public:
     Page();
     
-    bool load(Document* document, int page_number);
+    void initialize(Document* document, int page_number);
+    bool load();
+    void unload();
     
     double width();
     double height();

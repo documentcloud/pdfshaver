@@ -7,14 +7,30 @@
 
 Page::Page() { this->opened = false; }
 
-bool Page::load(Document* document, int page_index) {
+Page::~Page() {
+  if (this->opened) {
+    this->unload();
+    this->document->notifyPageClosed(this);
+  }
+}
+
+void Page::initialize(Document* document, int page_index) {
   this->document = document;
   this->page_index = page_index;
-  
-  this->fpdf_page = FPDF_LoadPage(document->fpdf_document, page_index);
-  document->notifyPageOpened(this);
-  this->opened = true;
+}
+
+bool Page::load() {
+  if (!this->opened) {
+    this->fpdf_page = FPDF_LoadPage(this->document->fpdf_document, this->page_index);
+    this->document->notifyPageOpened(this);
+    this->opened = true;
+  }
   return this->opened;
+}
+
+void Page::unload() {
+  if (this->opened){ FPDF_ClosePage(this->fpdf_page); }
+  this->opened = false;
 }
 
 double Page::width(){ return FPDF_GetPageWidth(this->fpdf_page); }
@@ -107,13 +123,6 @@ bool Page::render(char* path, int width, int height) {
   return success;
 }
 
-Page::~Page() { 
-  if (this->opened) {
-    FPDF_ClosePage(this->fpdf_page);
-    this->document->notifyPageClosed(this);
-  }
-}
-
 /********************************************
 * Ruby class definition and initialization
 *********************************************/
@@ -128,8 +137,8 @@ void Define_Page() {
   rb_define_method(rb_PDFShaver_Page, "render", CPP_RUBY_METHOD_FUNC(page_render), -1);
   rb_define_private_method(rb_PDFShaver_Page, "initialize_page_internals", 
                             CPP_RUBY_METHOD_FUNC(initialize_page_internals),-1);
-  rb_define_private_method(rb_PDFShaver_Page, "load_data",   CPP_RUBY_METHOD_FUNC(page_load_data), 1);
-  rb_define_private_method(rb_PDFShaver_Page, "unload_data", CPP_RUBY_METHOD_FUNC(page_unload_data), 1);
+  rb_define_private_method(rb_PDFShaver_Page, "load_data",   CPP_RUBY_METHOD_FUNC(page_load_data), 0);
+  rb_define_private_method(rb_PDFShaver_Page, "unload_data", CPP_RUBY_METHOD_FUNC(page_unload_data), 0);
 }
 
 VALUE page_allocate(VALUE rb_PDFShaver_Page) {
@@ -188,7 +197,8 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   Page* page;
   Data_Get_Struct(self, Page, page);
   
-  page->load(document, FIX2INT(page_index));
+  page->initialize(document, FIX2INT(page_index));
+  page->load();
   
   rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
   rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));
