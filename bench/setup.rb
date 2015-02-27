@@ -29,13 +29,25 @@ end
 # but as it turns out rendering isn't the problem so
 # this method isn't any heavier in memory usage than
 # the easy render!
-def full_render(page, dir)
+def full_naive_render(page, dir)
   sizes = %w[1000x 700x 180x 60x75!]
   sizes.each do |size_string|
     dimensions = page.extract_dimensions_from_gm_geometry_string(size_string)
     out_path = File.join(dir,"#{page.number}_#{size_string}.gif")
     #puts out_path
     page.render(out_path, dimensions)
+  end
+end
+
+def full_smart_render(p, dir)
+  p.with_data_loaded do |page|
+    sizes = %w[1000x 700x 180x 60x75!]
+    sizes.each do |size_string|
+      dimensions = page.extract_dimensions_from_gm_geometry_string(size_string)
+      out_path = File.join(dir,"#{page.number}_#{size_string}.gif")
+      #puts out_path
+      page.render(out_path, dimensions)
+    end
   end
 end
 
