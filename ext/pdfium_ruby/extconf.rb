@@ -1,24 +1,30 @@
 require "mkmf"
 require 'rbconfig'
-# List directories to search for PDFium headers and library files to link against
-def append_pdfium_directory_to paths
-  paths.map do |dir|
-    [
-      File.join(dir, 'pdfium'),
-      File.join(dir, 'pdfium', 'fpdfsdk', 'include'),
-      File.join(dir, 'pdfium', 'third_party', 'base', 'numerics')
-    ]
-  end.flatten + paths
+
+def append_search_paths_to search_dirs, search_suffixes
+  search_dirs.map do |dir|
+    search_suffixes.map do |path|
+      File.join(dir, path)
+    end
+  end.flatten + search_dirs
 end
 
-LIB_DIRS    = append_pdfium_directory_to %w[
+lib_dirs = %w[
   /usr/local/lib/
   /usr/lib/
 ]
-HEADER_DIRS = append_pdfium_directory_to %w[
+header_dirs = %w[
   /usr/local/include/
   /usr/include/
 ]
+header_paths = [
+  'pdfium',
+  File.join('pdfium', 'core', 'include'),
+  File.join('pdfium', 'fpdfsdk', 'include'),
+  File.join('pdfium', 'third_party', 'base', 'numerics')
+]
+LIB_DIRS    = append_search_paths_to lib_dirs, ['pdfium']
+HEADER_DIRS = append_search_paths_to header_dirs, header_paths
 
 # Tell ruby we want to search in the specified paths
 dir_config("pdfium", HEADER_DIRS, LIB_DIRS)
