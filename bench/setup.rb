@@ -2,17 +2,24 @@ require_relative '../lib/pdfshaver'
 require 'fileutils'
 require 'pp'
 
+def print_rss(message="", io=STDOUT)
+  io.puts "#{message} [RSS: #{`ps -eo rss,pid | grep #{Process.pid} | grep -v grep | awk '{ print $1;  }'`.chomp}]"
+end
+
 def extract(doc_path, prefix=rand(10**10))
   out_dir = File.join(".", "output", prefix.to_s)
   FileUtils.mkdir_p(out_dir)
-  log = File.open(File.join(out_dir, "log.txt"), 'w')
-  log.sync = true
+  #log = File.open(File.join(out_dir, "log.txt"), 'w')
+  #log.sync = true
+  log = STDOUT
   doc = PDFShaver::Document.new(doc_path)
   doc.pages.each do |page|
+    log.puts("Waiting for confirmation...")
+    STDIN.gets
     log.puts("#{Time.now}: rendering page #{page.number}")
     # shamelessly stolen from http://samsaffron.com/archive/2014/04/08/ruby-2-1-garbage-collection-ready-for-production
     log.puts "RSS: #{`ps -eo rss,pid | grep #{Process.pid} | grep -v grep | awk '{ print $1;  }'`}"
-    #GC.start
+    GC.start
     #log.puts(GC.stat)
     easy_render(page, out_dir)
   end
