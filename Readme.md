@@ -23,45 +23,36 @@ PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and for now, in
 
 [pdfium]: https://code.google.com/p/pdfium/
 
-In order install PDFium, you'll need Python, a C++ compiler, FreeImage and `git`.  All of these tools should be available for your operating system.
+### Getting PDFium and FreeImage
 
-### OSX
+#### On ubuntu/debian
 
+We've built a .deb which you can download.  Once you have downloaded the file, you can install it like this:
 
-#### C++ compiler
-Check whether you have the xcode command line tools installed by typing `xcode-select -p`.  If this command returns something like `/Applications/Xcode.app/Contents/Developer` then you have the command line tools installed already.
+`sudo dpkg -i libpdfium-dev_0.1+git20150228-1_amd64.deb` (where `libpdfium-dev_0.1+git20150228-1_amd64.deb` is the name of the file you just downloaded)
 
-If you do not already have the xcode commandline tools installed running `xcode-select --install` will start you off down the correct path.
+And install FreeImage:
 
--------------------
-
-At this point, it may be convenient to install Homebrew.
-
-#### Python
-
-If you're using a recent Mac, you should already have Python 2.7 installed on your machine.  You can check what version of Python you're running by typing `python --version` into your terminal.  If you don't have a recent version of python (version 2.7 or greater) installed, you'll 
-
-#### `git`
-
-If you have homebrew installed simply type `brew install git`
-
-### Linux (we'll assume ubuntu or debian)
-
-#### C++ Compiler
-`sudo apt-get install build-essential`
-#### `git`
-`sudo apt-get install git`
-#### FreeImage
 `sudo apt-get install libfreeimage-dev`
 
-### Getting PDFium's dependencies
+#### On OSX
 
-If you have any trouble check [PDFium's build instructions](https://code.google.com/p/pdfium/wiki/Build) for the most up to date instructions.
+You can use homebrew to install pdfium's current code using our Homebrew formula:
 
+`brew install --HEAD https://raw.githubusercontent.com/knowtheory/homebrew/45606ddde3fdd657655208be0fb1a065e142a4f1/Library/Formula/pdfium.rb`
 
+Then install FreeImage:
 
-### Getting the PDFium code
+`brew install freeimage`
 
-`git clone https://pdfium.googlesource.com/pdfium`
+#### On Windows
 
+Unfortunately we don't have a windows package yet.
 
+#### On other linux/unix systems
+
+Sorry we don't have a release for your OS but we'd be happy to talk to you about how we packaged PDFium for OSX and Ubuntu, if you'd like to help package PDFium for your distribution/os!
+
+### Install PDFShaver
+
+`gem install pdfshaver` (you may have to use `sudo gem` instead of just `gem`)
