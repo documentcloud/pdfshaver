@@ -2,7 +2,7 @@
 
 # N.B. THIS IS A WORK IN PROGRESS
 
-Shave pages off of PDFs as images
+Shave pages off of PDFs as images.
 
 ### Examples
 
@@ -17,17 +17,17 @@ copyright 2015 Ted Han, Nathan Stitt & DocumentCloud
 
 ## Installation
 
-PDFShaver is distributed as a Ruby gem.  Once you have it's dependencies installed, all you have to do is type `gem install pdfshaver` (although in some cases you'll need to stick a `sudo` before the command).
+PDFShaver is distributed as a Ruby gem.  Once you have its dependencies installed, all you have to do is type `gem install pdfshaver` (although in some cases you'll need to stick a `sudo` before the command).
 
-PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and for now, installing `PDFium` takes a little bit of doing.
+PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and, for now, installing `PDFium` takes a little bit of doing.
 
 [pdfium]: https://code.google.com/p/pdfium/
 
 ### Getting PDFium and FreeImage
 
-#### On ubuntu/debian
+#### On Ubuntu/Debian
 
-We've built a .deb which you can download.  Once you have downloaded the file, you can install it like this:
+We've built a .deb that you can download. Once you have downloaded the file, you can install it like this:
 
 `sudo dpkg -i libpdfium-dev_0.1+git20150228-1_amd64.deb` (where `libpdfium-dev_0.1+git20150228-1_amd64.deb` is the name of the file you just downloaded)
 
@@ -47,11 +47,11 @@ Then install FreeImage:
 
 #### On Windows
 
-Unfortunately we don't have a windows package yet.
+Unfortunately, we don't have a Windows package yet.
 
-#### On other linux/unix systems
+#### On other Linux/Unix systems
 
-Sorry we don't have a release for your OS but we'd be happy to talk to you about how we packaged PDFium for OSX and Ubuntu, if you'd like to help package PDFium for your distribution/os!
+Sorry we don't have a release for your OS but we'd be happy to talk to you about how we packaged PDFium for OSX and Ubuntu if you'd like to help package PDFium for your distribution/os!
 
 ### Install PDFShaver
 
