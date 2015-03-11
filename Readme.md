@@ -33,9 +33,9 @@ Once you have downloaded the file, you can install it like this:
 
 `sudo dpkg -i libpdfium-dev_0.1+git20150311-1_amd64.deb` (where `libpdfium-dev_0.1+git20150311-1_amd64.deb` is the name of the file you just downloaded)
 
-And install FreeImage:
+And install FreeImage and FreeType:
 
-`sudo apt-get install libfreeimage-dev`
+`sudo apt-get install libfreeimage-dev libfreetype6-dev`
 
 #### On OSX
 
