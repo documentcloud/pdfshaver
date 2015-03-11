@@ -29,7 +29,9 @@ PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and, for now, i
 
 We've built a .deb that you can download. Once you have downloaded the file, you can install it like this:
 
-`sudo dpkg -i libpdfium-dev_0.1+git20150228-1_amd64.deb` (where `libpdfium-dev_0.1+git20150228-1_amd64.deb` is the name of the file you just downloaded)
+`wget 'http://s3.documentcloud.org.s3.amazonaws.com/pdfium/libpdfium-dev_0.1%2Bgit20150311-1_amd64.deb'`
+
+`sudo dpkg -i libpdfium-dev_0.1+git20150311-1_amd64.deb` (where `libpdfium-dev_0.1+git20150311-1_amd64.deb` is the name of the file you just downloaded)
 
 And install FreeImage:
 
