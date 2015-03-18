@@ -156,14 +156,16 @@ void Define_Page() {
   rb_define_private_method(rb_PDFShaver_Page, "unload_data", CPP_RUBY_METHOD_FUNC(page_unload_data), 0);
 }
 
-// Create a new C++ Page object and store it in any newly created
-// Ruby page instances.
+// the C++ page can be deleted when we're done with the Ruby page.
+static void destroy_page(Page* page) { delete page; }
+
+// Whenever a PDFShaver::Page is created, we'll create a new C++ Page object 
+// and store it in the newly created Ruby page instances, and inform it to
+// clean the page up using `destroy_page`.
 VALUE page_allocate(VALUE rb_PDFShaver_Page) {
   Page* page = new Page();
   return Data_Wrap_Struct(rb_PDFShaver_Page, NULL, destroy_page, page);
 }
-// And delete the C++ page when we're done with the Ruby page.
-static void destroy_page(Page* page) { delete page; }
 
 // This function does the actual initialization of the C++ page's internals
 // defining which page of the document will be opened when `load_data` is called.
@@ -171,6 +173,7 @@ VALUE initialize_page_internals(int arg_count, VALUE* args, VALUE self) {
   // use Ruby's argument scanner to pull out a required
   VALUE rb_document, page_index, options;
   int number_of_args = rb_scan_args(arg_count, args, "21", &rb_document, &page_index, &options);
+  if (number_of_args > 2) { /* there are options */ }
   
   // fetch the C++ document from the Ruby document the page has been initialized with
   Document* document;
@@ -202,12 +205,18 @@ VALUE page_unload_data(VALUE self) {
   return Qtrue;
 }
 
+VALUE page_text_length(VALUE self) {
+  Page* page;
+  Data_Get_Struct(self, Page, page);
+  return INT2FIX(page->text_length());
+}
+
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
 VALUE page_render(int arg_count, VALUE* args, VALUE self) {
   VALUE path, options;
   int width = 0, height = 0;
 
-  int number_of_args = rb_scan_args(arg_count, args, "1:", &path, &options);
+  rb_scan_args(arg_count, args, "1:", &path, &options);
   if (arg_count > 1) {
     VALUE rb_width  = rb_hash_aref(options, ID2SYM(rb_intern("width")));
     VALUE rb_height = rb_hash_aref(options, ID2SYM(rb_intern("height")));

@@ -35,6 +35,7 @@ VALUE page_render(int arg_count, VALUE* args, VALUE self);
 VALUE page_allocate(VALUE rb_PDFShaver_Page);
 VALUE page_load_data(VALUE rb_PDFShaver_Page);
 VALUE page_unload_data(VALUE rb_PDFShaver_Page);
-static void destroy_page(Page* page);
+VALUE page_text_length(VALUE rb_PDFShaver_Page);
+//static void destroy_page(Page* page);
 
 #endif

@@ -8,7 +8,7 @@ void Init_pdfium_ruby (void) {
   FPDF_InitLibrary();
   
   // Define `PDFShaver` module as a namespace for all of our other objects
-  VALUE rb_PDFShaver = rb_define_module("PDFShaver");
+  rb_define_module("PDFShaver");
   
   // Define `Document` and `Page` classes
   Define_Document();

@@ -45,9 +45,8 @@ class Document {
     std::unordered_set<Page*> open_pages;
 };
 
-static void destroy_document_when_safe(Document* document);
-
 VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self);
 VALUE document_allocate(VALUE rb_PDFShaver_Document);
+//static void destroy_document_when_safe(Document* document);
 void document_handle_parse_status(int status, VALUE path);  
 #endif // __DOCUMENT_H__

@@ -68,6 +68,17 @@ void Define_Document() {
                             CPP_RUBY_METHOD_FUNC(initialize_document_internals), -1);
 };
 
+// Because a PDFium document's lifecycle has some complexity,
+// its ruby deallocator doesn't immediately release its memory.
+// The deallocator instead defers to the C++ class to track when
+// it should be deallocated.
+static void destroy_document_when_safe(Document* document) {
+  document->flagDocumentAsReadyForRelease();
+  document->destroyUnlessPagesAreOpen();
+}
+
+// Whenever a PDFShaver::Document is created, create a C++ Document
+// in the document instance.
 VALUE document_allocate(VALUE rb_PDFShaver_Document) {
   Document* document = new Document();
   return Data_Wrap_Struct(rb_PDFShaver_Document, NULL, destroy_document_when_safe, document);
@@ -79,6 +90,7 @@ VALUE initialize_document_internals(int arg_count, VALUE* args, VALUE self) {
   // `path` argument and an optional `options` hash.
   VALUE path, options;
   int number_of_args = rb_scan_args(arg_count, args, "11", &path, &options);
+  if (number_of_args > 1) { /* there are options */}
 
   // attempt to open document.
   // path should at this point be validated & known to exist.
@@ -120,9 +132,4 @@ void document_handle_parse_status(int status, VALUE path) {
   //    rb_raise(rb_eMissingHandlerError, "could not find handler for media objects in file (%" PRIsVALUE")", path);
   //    break; 
   //}
-}
-
-static void destroy_document_when_safe(Document* document) {
-  document->flagDocumentAsReadyForRelease();
-  document->destroyUnlessPagesAreOpen();
 }
