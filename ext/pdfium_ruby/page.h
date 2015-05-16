@@ -8,19 +8,23 @@ class Document;
 
 class Page {
   public:
+    // C++ constructor & destructor.
     Page();
+    ~Page();
     
+    // Ruby Data Initializer
     void initialize(Document* document, int page_number);
+    
+    // PDFium data initializer & cleanup
     bool load();
     void unload();
     
+    // Data access methods
     double width();
     double height();
     double aspect();
     
     bool render(char* path, int width, int height);
-    
-    ~Page();
     
   private:
     int page_index;

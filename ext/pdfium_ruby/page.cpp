@@ -9,7 +9,7 @@
 Page::Page() { this->opened = false; }
 
 // When destroying a C++ Page, make sure to dispose of the internals properly.
-// And notify the parent document that this page is no longer going to be used.
+// And notify the parent document that this page will no longer be used.
 Page::~Page() {
   if (this->opened) {
     this->unload();
@@ -42,8 +42,8 @@ void Page::unload() {
 }
 
 // readers for the page's dimensions.
-double Page::width(){ return FPDF_GetPageWidth(this->fpdf_page); }
-double Page::height(){ return FPDF_GetPageHeight(this->fpdf_page); }
+double Page::width()  { return FPDF_GetPageWidth(this->fpdf_page); }
+double Page::height() { return FPDF_GetPageHeight(this->fpdf_page); }
 double Page::aspect() { return width() / height(); }
 
 // Render the page to a destination path with the dimensions
@@ -205,11 +205,11 @@ VALUE page_unload_data(VALUE self) {
   return Qtrue;
 }
 
-VALUE page_text_length(VALUE self) {
-  Page* page;
-  Data_Get_Struct(self, Page, page);
-  return INT2FIX(page->text_length());
-}
+//VALUE page_text_length(VALUE self) {
+//  Page* page;
+//  Data_Get_Struct(self, Page, page);
+//  return INT2FIX(page->text_length());
+//}
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
 VALUE page_render(int arg_count, VALUE* args, VALUE self) {
