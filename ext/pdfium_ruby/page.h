@@ -5,6 +5,7 @@
 class Document;
 #include "pdfium_ruby.h"
 #include "document.h"
+#include "fpdftext.h"
 
 class Page {
   public:
@@ -23,14 +24,16 @@ class Page {
     double width();
     double height();
     double aspect();
+    int text_length();
     
     bool render(char* path, int width, int height);
     
   private:
-    int page_index;
-    bool opened;
-    Document *document;
-    FPDF_PAGE fpdf_page;
+    int           page_index;
+    bool          opened;
+    Document      *document;
+    FPDF_PAGE     fpdf_page;
+    FPDF_TEXTPAGE text_page;
 };
 
 void Define_Page();
