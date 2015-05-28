@@ -39,6 +39,11 @@ module PDFShaver
       load_dimensions unless @aspect
       @aspect
     end
+    
+    def length
+      load_dimensions unless @length
+      @length
+    end
 
     def with_data_loaded &block
       load_data

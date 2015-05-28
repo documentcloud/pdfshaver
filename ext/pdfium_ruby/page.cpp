@@ -30,6 +30,7 @@ void Page::initialize(Document* document, int page_index) {
 bool Page::load() {
   if (!this->opened) {
     this->fpdf_page = FPDF_LoadPage(this->document->fpdf_document, this->page_index);
+    this->text_page = FPDFText_LoadPage(this->fpdf_page);
     this->opened = true;
   }
   return this->opened;
@@ -37,14 +38,17 @@ bool Page::load() {
 
 // Unload the page (freeing the page's memory) and mark it as not open.
 void Page::unload() {
-  if (this->opened){ FPDF_ClosePage(this->fpdf_page); }
+  if (this->opened){ 
+    FPDFText_ClosePage(this->text_page);
+    FPDF_ClosePage(this->fpdf_page);
+  }
   this->opened = false;
 }
 
 // readers for the page's dimensions.
-double Page::width()  { return FPDF_GetPageWidth(this->fpdf_page); }
-double Page::height() { return FPDF_GetPageHeight(this->fpdf_page); }
-double Page::aspect() { return width() / height(); }
+double Page::width()  {      return FPDF_GetPageWidth(this->fpdf_page); }
+double Page::height() {      return FPDF_GetPageHeight(this->fpdf_page); }
+double Page::aspect() {      return width() / height(); }
 int    Page::text_length() { return FPDFText_CountChars(this->text_page); }
 
 // Render the page to a destination path with the dimensions
@@ -195,6 +199,7 @@ VALUE page_load_data(VALUE self) {
   rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
   rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));
   rb_ivar_set(self, rb_intern("@aspect"), rb_float_new(page->aspect()));
+  rb_ivar_set(self, rb_intern("@length"), INT2FIX(page->text_length()));
   return Qtrue;
 }
 
@@ -210,6 +215,12 @@ VALUE page_text_length(VALUE self) {
   Page* page;
   Data_Get_Struct(self, Page, page);
   return INT2FIX(page->text_length());
+}
+
+VALUE page_text(VALUE self) {
+  Page* page;
+  Data_Get_Struct(self, Page, page);
+  return INT2FIX(page->text());
 }
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {

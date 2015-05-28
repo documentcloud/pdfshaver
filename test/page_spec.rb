@@ -128,6 +128,7 @@ describe PDFShaver::Page do
       @page.instance_variable_get("@height").must_equal nil
       @page.instance_variable_get("@width").must_equal nil
       @page.instance_variable_get("@aspect").must_equal nil
+      @page.instance_variable_get("@length").must_equal nil
       
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
       @page.send(:load_dimensions)
@@ -135,6 +136,7 @@ describe PDFShaver::Page do
       @page.height.wont_equal nil
       @page.width.wont_equal nil
       @page.aspect.wont_equal nil
+      @page.length.wont_equal nil
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
     end
     
