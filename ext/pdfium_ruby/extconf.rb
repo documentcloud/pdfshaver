@@ -1,11 +1,11 @@
 require "mkmf"
 require 'rbconfig'
 
+# Take a set of directories to search (usually system paths)
+# and append the paths that we expect to find PDFium's peices.
 def append_search_paths_to search_dirs, search_suffixes
   search_dirs.map do |dir|
-    search_suffixes.map do |path|
-      File.join(dir, path)
-    end
+    search_suffixes.map{ |path| File.join(dir, path) }
   end.flatten + search_dirs
 end
 
@@ -36,14 +36,6 @@ LIB_FILES= %w[
   fpdfdoc
   fpdftext
   formfiller
-  icudata
-  icuuc
-  icui18n
-  v8_libbase
-  v8_base
-  v8_snapshot
-  v8_libplatform
-  jsapi
   pdfwindow
   fxedit
   fxcrt
