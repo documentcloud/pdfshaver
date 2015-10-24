@@ -49,7 +49,7 @@ void Page::unload() {
 double Page::width()  {      return FPDF_GetPageWidth(this->fpdf_page); }
 double Page::height() {      return FPDF_GetPageHeight(this->fpdf_page); }
 double Page::aspect() {      return width() / height(); }
-int    Page::text_length() { return FPDFText_CountChars(this->text_page); }
+//int    Page::text_length() { return FPDFText_CountChars(this->text_page); }
 
 // Render the page to a destination path with the dimensions
 // specified by width & height (or appropriate defaults).
@@ -199,7 +199,7 @@ VALUE page_load_data(VALUE self) {
   rb_ivar_set(self, rb_intern("@width"),  INT2FIX(page->width()));
   rb_ivar_set(self, rb_intern("@height"), INT2FIX(page->height()));
   rb_ivar_set(self, rb_intern("@aspect"), rb_float_new(page->aspect()));
-  rb_ivar_set(self, rb_intern("@length"), INT2FIX(page->text_length()));
+  //rb_ivar_set(self, rb_intern("@length"), INT2FIX(page->text_length()));
   return Qtrue;
 }
 
@@ -211,17 +211,17 @@ VALUE page_unload_data(VALUE self) {
   return Qtrue;
 }
 
-VALUE page_text_length(VALUE self) {
-  Page* page;
-  Data_Get_Struct(self, Page, page);
-  return INT2FIX(page->text_length());
-}
+//VALUE page_text_length(VALUE self) {
+//  Page* page;
+//  Data_Get_Struct(self, Page, page);
+//  return INT2FIX(page->text_length());
+//}
 
-VALUE page_text(VALUE self) {
-  Page* page;
-  Data_Get_Struct(self, Page, page);
-  return INT2FIX(page->text());
-}
+//VALUE page_text(VALUE self) {
+//  Page* page;
+//  Data_Get_Struct(self, Page, page);
+//  return INT2FIX(page->text());
+//}
 
 //bool page_render(int arg_count, VALUE* args, VALUE self) {
 VALUE page_render(int arg_count, VALUE* args, VALUE self) {

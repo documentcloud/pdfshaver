@@ -5,7 +5,6 @@
 class Page;
 #include "pdfium_ruby.h"
 #include "fpdf_ext.h"
-//#include "core/include/fpdfapi/fpdf_parser.h"
 #include "page.h"
 #include <unordered_set>
 

@@ -5,7 +5,7 @@
 class Document;
 #include "pdfium_ruby.h"
 #include "document.h"
-#include "fpdftext.h"
+#include "fpdf_text.h"
 
 class Page {
   public:
