@@ -19,30 +19,37 @@ header_dirs = %w[
 ]
 header_paths = [
   'pdfium',
+  File.join('pdfium', 'public'),
   File.join('pdfium', 'core', 'include'),
   File.join('pdfium', 'fpdfsdk', 'include'),
   File.join('pdfium', 'third_party', 'base', 'numerics')
 ]
-LIB_DIRS    = append_search_paths_to lib_dirs, ['pdfium']
+LIB_DIRS    = append_search_paths_to lib_dirs, ['pdfium', File.join('pdfium','third_party')]
 HEADER_DIRS = append_search_paths_to header_dirs, header_paths
 
 # Tell ruby we want to search in the specified paths
 dir_config("pdfium", HEADER_DIRS, LIB_DIRS)
 
+# lib order needs to be in dependency loaded order, or will not link properly.
 LIB_FILES= %w[
   javascript
   bigint
-  freetype
+  fx_freetype
+  fx_agg
+  fx_lcms2
+  fx_libjpeg
+  fx_libopenjpeg
+  fx_zlib
+  fxedit
+  fxcrt
+  fxcodec
+  fxge
   fpdfdoc
   fpdftext
   formfiller
   pdfwindow
-  fxedit
-  fxcrt
-  fxcodec
   fpdfdoc
   fdrm
-  fxge
   fpdfapi
   freetype
   pdfium

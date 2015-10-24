@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    pdfium (0.0.1)
+    pdfshaver (0.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -19,8 +19,11 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.5)
-  fastimage
-  minitest
-  pdfium!
-  rake
-  rake-compiler
+  fastimage (~> 1.6)
+  minitest (~> 5.5)
+  pdfshaver!
+  rake (~> 10.4)
+  rake-compiler (~> 0.9)
+
+BUNDLED WITH
+   1.10.6
