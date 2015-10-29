@@ -10,21 +10,26 @@ def append_search_paths_to search_dirs, search_suffixes
 end
 
 lib_dirs = %w[
-  /usr/local/lib/
-  /usr/lib/
+  /usr/local/Cellar/pdfium/HEAD/lib
+  /usr/local/lib/pdfium
+  /usr/lib/pdfium
+  /usr/local/lib
+  /usr/lib
 ]
 header_dirs = %w[
+  /usr/local/Cellar/pdfium/HEAD/include
+  /usr/local/include/pdfium
+  /usr/include/pdfium
   /usr/local/include/
   /usr/include/
 ]
 header_paths = [
-  'pdfium',
-  File.join('pdfium', 'public'),
-  File.join('pdfium', 'core', 'include'),
-  File.join('pdfium', 'fpdfsdk', 'include'),
-  File.join('pdfium', 'third_party', 'base', 'numerics')
+  'public',
+  File.join('core', 'include'),
+  File.join('fpdfsdk', 'include'),
+  File.join('third_party', 'base', 'numerics')
 ]
-LIB_DIRS    = append_search_paths_to lib_dirs, ['pdfium', File.join('pdfium','third_party')]
+LIB_DIRS    = append_search_paths_to lib_dirs, ['third_party']
 HEADER_DIRS = append_search_paths_to header_dirs, header_paths
 
 # Tell ruby we want to search in the specified paths
@@ -51,7 +56,6 @@ LIB_FILES= %w[
   fpdfdoc
   fdrm
   fpdfapi
-  freetype
   pdfium
   pthread
   freeimage
