@@ -6,3 +6,4 @@ mkmf.log
 test/output
 .DS_Store
 output
+Gemfile.lock
