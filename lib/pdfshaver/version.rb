@@ -1,4 +1,4 @@
 module PDFShaver
-  VERSION='0.0.2'
+  VERSION='0.0.3'
   VERSION_RELEASED='2015-10-28'
 end
