@@ -27,7 +27,7 @@ PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and, for now, i
 
 #### On Ubuntu/Debian
 
-We've built a .deb that you can download by running: `wget 'http://assets.documentcloud.org/pdfium/libpdfium-dev_20151024.163326_amd64.deb'`
+We've built a .deb that you can download by running: `wget 'https://assets.documentcloud.org/pdfium/libpdfium-dev_20151024.163326_amd64.deb'`
 
 Once you have downloaded the file, you can install it like this:
 
@@ -41,7 +41,7 @@ And install FreeImage and FreeType:
 
 You can use homebrew to install pdfium's current code using our Homebrew formula:
 
-`brew install --HEAD https://raw.githubusercontent.com/knowtheory/homebrew/45606ddde3fdd657655208be0fb1a065e142a4f1/Library/Formula/pdfium.rb`
+`brew install --HEAD https://raw.githubusercontent.com/knowtheory/homebrew/c35937bc14e9829d2e94100b9120273b1c496474/Library/Formula/pdfium.rb`
 
 Then install FreeImage:
 
