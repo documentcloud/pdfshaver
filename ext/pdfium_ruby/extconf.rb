@@ -36,33 +36,45 @@ HEADER_DIRS = append_search_paths_to header_dirs, header_paths
 dir_config("pdfium", HEADER_DIRS, LIB_DIRS)
 
 # lib order needs to be in dependency loaded order, or will not link properly.
-LIB_FILES= %w[
-  javascript
-  bigint
-  fx_freetype
-  fx_agg
-  fx_lcms2
-  jpeg
-  fx_libopenjpeg
-  fx_zlib
-  fxedit
-  fxcrt
-  fxcodec
-  fxge
-  fpdfdoc
-  fpdftext
-  formfiller
-  pdfwindow
-  fpdfdoc
-  fdrm
-  fpdfapi
-  pdfium
-  pthread
-  freeimage
+# this is a nested list of basic alternatives.
+LIB_FILES= [
+  ['javascript'],
+  ['bigint'],
+  ['fx_freetype'],
+  ['fx_agg'],
+  ['fx_lcms2'],
+  ['fx_libjpeg', 'jpeg'],
+  ['fx_libopenjpeg'],
+  ['fx_zlib'],
+  ['fxedit'],
+  ['fxcrt'],
+  ['fxcodec'],
+  ['fxge'],
+  ['fpdfdoc'],
+  ['fpdftext'],
+  ['formfiller'],
+  ['pdfwindow'],
+  ['fpdfdoc'],
+  ['fdrm'],
+  ['fpdfapi'],
+  ['pdfium'],
+  ['pthread'],
+  ['freeimage']
 ]
 
-LIB_FILES.each do | lib |
-  have_library(lib) or abort "Couldn't find library lib#{lib} in #{LIB_DIRS.join(', ')}"
+LIB_FILES.each do | alternatives |
+  
+  # produce plain english error message
+  lib_names = if alternatives.size > 1
+    lib_list = alternatives.map{|name|"lib#{name}"}
+    last_element = lib_list.pop
+    "any of #{lib_list.join(", ")}, or #{last_element}"
+  else 
+    "lib#{alternatives.first}"
+  end
+  message = "\nCould not find #{lib_names} in:\n\t#{LIB_DIRS.join("\n\t")}\n\n"
+
+  abort(message) unless alternatives.any?{ |lib| have_library(lib) }
 end
 
 $CPPFLAGS += " -fPIC -std=c++11 -Wall"
