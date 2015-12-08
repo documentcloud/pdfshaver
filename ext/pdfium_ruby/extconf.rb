@@ -42,7 +42,7 @@ LIB_FILES= %w[
   fx_freetype
   fx_agg
   fx_lcms2
-  fx_libjpeg
+  jpeg
   fx_libopenjpeg
   fx_zlib
   fxedit
