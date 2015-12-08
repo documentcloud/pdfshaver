@@ -1,7 +1,5 @@
 # PDFShaver
 
-# N.B. THIS IS A WORK IN PROGRESS
-
 Shave pages off of PDFs as images.
 
 ### Examples
@@ -27,11 +25,12 @@ PDFShaver depends on [Google Chrome's `PDFium` library][pdfium], and, for now, i
 
 #### On Ubuntu/Debian
 
-We've built a .deb that you can download by running: `wget 'https://assets.documentcloud.org/pdfium/libpdfium-dev_20151024.163326_amd64.deb'`
+We've built a .deb that you can download and install like so:
 
-Once you have downloaded the file, you can install it like this:
-
-`sudo dpkg -i libpdfium-dev_20151024.163326_amd64.deb` (where `libpdfium-dev_20151024.163326_amd64.deb` is the name of the file you just downloaded)
+```sh
+wget 'https://assets.documentcloud.org/pdfium/libpdfium-dev_20151208.015427_amd64.deb'
+sudo dpkg -i libpdfium-dev_20151208.015427_amd64.deb
+```
 
 And install FreeImage and FreeType:
 
