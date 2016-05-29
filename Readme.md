@@ -40,7 +40,7 @@ And install FreeImage and FreeType:
 
 You can use homebrew to install pdfium's current code using our Homebrew formula:
 
-`brew install --HEAD https://raw.githubusercontent.com/knowtheory/homebrew/c35937bc14e9829d2e94100b9120273b1c496474/Library/Formula/pdfium.rb`
+`brew install --HEAD https://raw.githubusercontent.com/knowtheory/homebrew/f0efc3d0bb6aeba08bd112d5ad6625149dac8dbb/Library/Formula/pdfium.rb`
 
 Then install FreeImage:
 
