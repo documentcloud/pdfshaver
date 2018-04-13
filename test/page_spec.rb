@@ -125,18 +125,18 @@ describe PDFShaver::Page do
     
     it "should not load data until requested" do
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
-      @page.instance_variable_get("@height").must_equal nil
-      @page.instance_variable_get("@width").must_equal nil
-      @page.instance_variable_get("@aspect").must_equal nil
-      @page.instance_variable_get("@length").must_equal nil
+      wont_be_nil @page.instance_variable_get("@height")
+      wont_be_nil @page.instance_variable_get("@width")
+      wont_be_nil @page.instance_variable_get("@aspect")
+      wont_be_nil @page.instance_variable_get("@length")
       
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
       @page.send(:load_dimensions)
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
-      @page.height.wont_equal nil
-      @page.width.wont_equal nil
-      @page.aspect.wont_equal nil
-      #@page.length.wont_equal nil
+      wont_be_nil @page.height
+      wont_be_nil @page.width
+      wont_be_nil @page.aspect
+      #wont_be_nil @page.length
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
     end
     
