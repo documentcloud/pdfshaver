@@ -133,10 +133,10 @@ describe PDFShaver::Page do
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
       @page.send(:load_dimensions)
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
-      wont_be_nil @page.height
-      wont_be_nil @page.width
-      wont_be_nil @page.aspect
-      #wont_be_nil @page.length
+      @page.height.wont_be_nil
+      @page.width.wont_be_nil
+      @page.aspect.wont_be_nil
+      #@page.length.wont_be_nil
       @page.instance_variable_get("@extension_data_is_loaded").must_equal false
     end
     
